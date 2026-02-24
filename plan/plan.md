@@ -151,24 +151,33 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 # v0.1.0
 
 - [ ] 1. Core Bookmark Management
-  - [ ] 1.1 Root command to bookmark current folder
+  - [x] 1.1 Root command to bookmark current folder
     - notes: `bookmark [alias]` command saves current directory with auto-generated or custom alias
     - example: `bookmark` → creates alias "mcp" for `/my/cool/project`
     - example: `bookmark web` → creates alias "web" for current directory
     - output: `✓ Bookmark created: web → /home/user/projects/webapp`
-  - [ ] 1.2 Auto-generate alias from directory name
+  - [x] 1.2 Auto-generate alias from directory name
     - notes: Default naming convention uses first letters of each "word" in current dir
     - example: `/my/cool/project` → `mcp`
     - example: `/home/user/dev` → `hud`
     - example: `/projects/web-app` → `pwa`
-  - [ ] 1.3 Optional custom alias via argument
+  - [x] 1.3 Optional custom alias via argument
     - notes: Allow user to pass custom bookmark string: `bookmark my-alias`
     - example: `bookmark web` saves current dir as "web"
     - validation: alias must be alphanumeric + hyphens/underscores only
-  - [ ] 1.4 Confirmation before overwriting existing bookmark
+  - [x] 1.4 Confirmation before overwriting existing bookmark
     - notes: Prompt user if alias already exists before replacing
     - example: `? Bookmark 'web' already exists. Overwrite? (y/N)`
     - behavior: default to No, require explicit confirmation
+  - [ ] 1.5 -y to accept overwrite from flag
+    - bypass confirmations
+  - [ ] 1.6 -f file flag
+    - [ ] - f and file to add open file in editor to bookmark, executed after navigation
+      - file bookmarks will navigate to folder and open file in configured editor
+  - [ ] 1.7 -e flag
+    - no args: open bookmarks_file in configured editor
+    - existing bookmark: open in editor at bookmark line
+    - non-existing bookmark: create and open in editor
 
 - [ ] 2. Interactive Bookmark Browser
   - [ ] 2.1 `-i` flag to view filterable list of bookmarks
