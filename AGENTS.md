@@ -10,6 +10,12 @@
 ## Build, Test
 use justfile
 
+if you need to call ./bin/package
+
+use local test config
+
+./bin/package -c ./tests/config/local.toml ... # additional tests
+
 ### Built and Test Docs
 
 use bun. do not use npm
