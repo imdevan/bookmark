@@ -284,6 +284,11 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - [ ] 2.1.1 home_icon = "~" (default) used in list view for home can be nerd font icon
     - [ ] 2.1.2 default_sort_by = "newist" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
 
+    - show associated functions
+    - [ ] 2.1.3 show tmux rename  name
+    - [ ] 2.1.4 show editor functions using nerd font icon for given editor  name
+
+
 
   - [ ] 2.2 CRUD operations in interactive mode
     - notes: Support Create, Read, Update, Delete actions from the list view
