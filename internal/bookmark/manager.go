@@ -70,7 +70,7 @@ func (m *Manager) parseShellScript(content string) ([]domain.Bookmark, error) {
 			}
 			currentBookmark = &domain.Bookmark{}
 			
-			// Parse metadata: # BM: alias|path|desc|created|updated|tmux|postscript|file
+			// Parse metadata: # BM: alias|path|desc|created|updated|tmux|execute|postscript|file
 			parts := strings.Split(strings.TrimPrefix(line, "# BM: "), "|")
 			if len(parts) >= 2 {
 				currentBookmark.Alias = parts[0]
@@ -89,10 +89,13 @@ func (m *Manager) parseShellScript(content string) ([]domain.Bookmark, error) {
 				currentBookmark.TmuxWindowName = parts[5]
 			}
 			if len(parts) >= 7 {
-				currentBookmark.PostJumpScript = parts[6]
+				currentBookmark.Execute = parts[6]
 			}
 			if len(parts) >= 8 {
-				currentBookmark.File = parts[7]
+				currentBookmark.PostJumpScript = parts[7]
+			}
+			if len(parts) >= 9 {
+				currentBookmark.File = parts[8]
 			}
 		}
 	}
@@ -123,13 +126,14 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 	
 	for _, bm := range bookmarks {
 		// Write metadata as comment
-		metadata := fmt.Sprintf("# BM: %s|%s|%s|%s|%s|%s|%s|%s\n",
+		metadata := fmt.Sprintf("# BM: %s|%s|%s|%s|%s|%s|%s|%s|%s\n",
 			bm.Alias,
 			bm.Path,
 			bm.Description,
 			bm.CreatedAt.Format(time.RFC3339),
 			bm.UpdatedAt.Format(time.RFC3339),
 			bm.TmuxWindowName,
+			bm.Execute,
 			bm.PostJumpScript,
 			bm.File,
 		)
@@ -166,6 +170,11 @@ func (m *Manager) buildNavigationCommand(bm domain.Bookmark) string {
 		navCmd = m.navTool
 	}
 	parts = append(parts, fmt.Sprintf("%s %s", navCmd, bm.Path))
+	
+	// Execute command (after navigation, before post-jump and file opening)
+	if bm.Execute != "" {
+		parts = append(parts, bm.Execute)
+	}
 	
 	// Post-jump script
 	if bm.PostJumpScript != "" {

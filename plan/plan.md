@@ -208,7 +208,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       => open bookmark_file at fb location
       ```
 
-  - [ ] 1.9 -x/execute flag
+  - [x] 1.9 -x/execute flag
     - added to alias after tmux rename but before open 
     - example:
       ```bash

@@ -36,6 +36,7 @@ type rootOptions struct {
 	yes         bool
 	file        string
 	edit        bool
+	execute     string
 }
 
 var rootCmd = newRootCmd()
@@ -99,6 +100,7 @@ func newRootCmd() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.yes, "yes", "y", false, "skip confirmation prompts")
 	cmd.Flags().StringVarP(&opts.file, "file", "f", "", "file to open in editor after navigation")
 	cmd.Flags().BoolVarP(&opts.edit, "edit", "e", false, "open bookmarks file in editor")
+	cmd.Flags().StringVarP(&opts.execute, "execute", "x", "", "command to execute after navigation")
 
 	cmd.AddCommand(newConfigCmd())
 	cmd.AddCommand(newCompletionCmd())
@@ -181,6 +183,7 @@ func buildBookmark(alias, cwd string, opts *rootOptions) domain.Bookmark {
 		Path:        cwd,
 		Description: opts.description,
 		File:        opts.file,
+		Execute:     opts.execute,
 	}
 
 	// Handle tmux settings

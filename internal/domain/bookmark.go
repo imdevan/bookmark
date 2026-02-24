@@ -10,6 +10,7 @@ type Bookmark struct {
 	CreatedAt       time.Time `toml:"created_at"`
 	UpdatedAt       time.Time `toml:"updated_at"`
 	TmuxWindowName  string    `toml:"tmux_window_name,omitempty"`
+	Execute         string    `toml:"execute,omitempty"`
 	PostJumpScript  string    `toml:"post_jump_script,omitempty"`
 	File            string    `toml:"file,omitempty"`
 }
