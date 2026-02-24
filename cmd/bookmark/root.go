@@ -96,7 +96,7 @@ func newRootCmd() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.showVersion, "version", "v", false, "print version information")
 	cmd.Flags().BoolVarP(&opts.interactive, "interactive", "i", false, "interactive bookmark browser")
 	cmd.Flags().BoolVarP(&opts.tmux, "tmux", "t", false, "set tmux window name (same as alias)")
-	cmd.Flags().StringVar(&opts.tmuxName, "tmux-name", "", "custom tmux window name")
+	cmd.Flags().StringVarP(&opts.tmuxName, "tmux-name", "T", "", "custom tmux window name")
 	cmd.Flags().StringVarP(&opts.description, "description", "d", "", "bookmark description")
 	cmd.Flags().BoolVarP(&opts.yes, "yes", "y", false, "skip confirmation prompts")
 	cmd.Flags().StringVarP(&opts.file, "file", "f", "", "file to open in editor after navigation")

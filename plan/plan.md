@@ -237,7 +237,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       bookmark b -> ~/Documents/bar created
         ```
 
-- [ ] 1.11 -T/Tmux flag 
+- [x] 1.11 -T/Tmux flag 
   - pass alternate rename variable
     - example:
       ```bash
