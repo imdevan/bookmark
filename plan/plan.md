@@ -231,18 +231,9 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - usage: Affects shell-init command output format
   - [ ] 4.3 Bookmark storage location
     - notes: Configurable bookmark file location
-    - config field: `bookmarks_file = "~/.bookmarks/bookmarks.toml"`
-    - default: `~/.bookmarks/bookmarks.toml`
+    - config field: `bookmarks_file = "~/.bookmarks/bookmarks.sh"`
+    - default: `~/.bookmarks/bookmarks.sh`
     - validation: Expand tilde, create parent directories if needed
-  - [ ] 4.4 Per-shell bookmark locations
-    - notes: Optional: support different bookmark files for different shells
-    - config example:
-      ```toml
-      [shell_bookmarks]
-      bash = "~/.bookmarks/bash.toml"
-      zsh = "~/.bookmarks/zsh.toml"
-      ```
-    - behavior: Falls back to `bookmarks_file` if shell-specific not set
 
 - [ ] 5. Shell Integration
   - [ ] 5.1 Generate shell-specific aliases
@@ -281,3 +272,16 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - usage instructions: `eval "$(bookmark shell-init bash)"`
     - add to shell rc: `echo 'eval "$(bookmark shell-init bash)"' >> ~/.bashrc`
     - behavior: Function wraps `bookmark go` and evaluates output in current shell
+
+#  v0.2.0
+
+  - [ ] 1 Per-shell bookmark locations
+    - notes: Optional: support different bookmark files for different shells
+    - config example:
+      ```toml
+      [shell_bookmarks]
+      bash = "~/.bookmarks/.toml"
+      zsh = "~/.bookmarks/zsh.toml"
+      ```
+    - behavior: Falls back to `bookmarks_file` if shell-specific not set
+
