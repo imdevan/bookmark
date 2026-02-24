@@ -174,17 +174,82 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - example: `? Bookmark 'web' already exists. Overwrite? (y/N)`
     - behavior: default to No, require explicit confirmation
 
-  - [ ] 1.5 -y to accept overwrite from flag
+  - [x] 1.5 -y to accept overwrite from flag
     - bypass confirmations
 
   - [ ] 1.6 -f file flag
     - [ ] - f and file to add open file in editor to bookmark, executed after navigation
       - file bookmarks will navigate to folder and open file in configured editor
+    - example:
+      ```bash
+      cd ~/Work/foo-bar
+
+      bookmark -t -f plan.md
+
+      bookmark 
+      fb -> ~/Work/foo-bar + tmux + open plan.md
+      created!
+
+      created alias: 
+      alias fb="$nav_command ~/Work/foo-bar && tmux rename-window fb" && $editor plan.md"
+      ```
 
   - [ ] 1.7 -e flag
     - no args: open bookmarks_file in configured editor
     - existing bookmark: open in editor at bookmark line
     - non-existing bookmark: create and open in editor
+    - example:
+      ```bash
+      cd ~/Work/foo-bar
+
+      bookmark -e
+
+      bookmark fb -> ~/Work/foo-bar
+      => open bookmark_file at fb location
+      ```
+
+  - [ ] 1.9 -x/execute flag
+    - added to alias after tmux rename but before open 
+    - example:
+      ```bash
+      cd ~/Work/foo-bar
+
+      bookmark -x 'cowsay "toast"'
+
+      bookmark:
+
+      fb -> ~/Work/foo-bar
+      cowsay "toast"
+
+      created!
+      ```
+      
+
+
+  - [ ] 1.10 -s/source flag (or b/bookmark if more appropriate?)
+    - location to bookmark 
+    - example:
+      ```bash
+      cd ~/Work/foo-bar
+
+      bookmark -s ~/Documents/bar
+
+      bookmark b -> ~/Documents/bar created
+        ```
+
+
+  - [ ] 1.11 Alias creation
+    - aliases should always:
+      - navigate to folder
+      - then rename tmux if present
+      - then execute any additional script if present
+      - then open associated file
+      - comments at end of line
+    - this structure should be relied on to use to format the alias visually in the ui
+
+
+  - [ ] 1.11 root tests
+    - Test all features from task 1 through 1.7 (only)
 
 - [ ] 2. Interactive Bookmark Browser
 ---
