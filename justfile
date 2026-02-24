@@ -1,17 +1,17 @@
 set shell := ["zsh", "-cu"]
 
 build:
-	go build -o bin/go-cli-template ./cmd/go-cli-template
-	@ls -lh bin/go-cli-template | awk '{print "Build size: " $$5}'
+	go build -o bin/bookmark ./cmd/bookmark
+	@ls -lh bin/bookmark | awk '{print "Build size: " $$5}'
 
 build-run:
-	go build -o bin/go-cli-template ./cmd/go-cli-template && ./bin/go-cli-template
+	go build -o bin/bookmark ./cmd/bookmark && ./bin/bookmark
 
 watch:
-	@rg --files | entr -r sh -c 'sleep 0.5; go build -o bin/go-cli-template ./cmd/go-cli-template'
+	@rg --files | entr -r sh -c 'sleep 0.5; go build -o bin/bookmark ./cmd/bookmark'
 
 dev-build:
-	go build -gcflags "all=-N -l" -o bin/go-cli-template ./cmd/go-cli-template
+	go build -gcflags "all=-N -l" -o bin/bookmark ./cmd/bookmark
 
 cross-platform:
 	./scripts/build.sh
@@ -20,7 +20,7 @@ build-aur:
 	./scripts/build_aur.sh
 
 install:
-	install -m 0755 bin/go-cli-template /usr/local/bin/go-cli-template
+	install -m 0755 bin/bookmark /usr/local/bin/bookmark
 
 test:
 	go test ./...
