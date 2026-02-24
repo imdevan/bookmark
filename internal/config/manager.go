@@ -105,6 +105,7 @@ type partialConfig struct {
 	AutoAliasSeparator   *string `toml:"auto_alias_separator"`
 	AutoAliasLowercase   *bool   `toml:"auto_alias_lowercase"`
 	HomeIcon             *string `toml:"home_icon"`
+	DefaultSortBy        *string `toml:"default_sort_by"`
 }
 
 func readConfig(path string) (*partialConfig, error) {
@@ -182,6 +183,9 @@ func applyPartial(config *domain.Config, partial *partialConfig) {
 	}
 	if partial.HomeIcon != nil {
 		config.HomeIcon = *partial.HomeIcon
+	}
+	if partial.DefaultSortBy != nil {
+		config.DefaultSortBy = *partial.DefaultSortBy
 	}
 }
 

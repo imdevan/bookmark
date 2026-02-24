@@ -29,6 +29,7 @@ type Config struct {
 	AutoAliasSeparator   string `toml:"auto_alias_separator"`
 	AutoAliasLowercase   bool   `toml:"auto_alias_lowercase"`
 	HomeIcon             string `toml:"home_icon"`
+	DefaultSortBy        string `toml:"default_sort_by"`
 }
 
 // DefaultConfig returns the default configuration values.
@@ -57,6 +58,7 @@ func DefaultConfig() Config {
 		AutoAliasSeparator:   "",
 		AutoAliasLowercase:   true,
 		HomeIcon:             "~",
+		DefaultSortBy:        "newest",
 	}
 }
 

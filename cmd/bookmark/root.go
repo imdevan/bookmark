@@ -283,7 +283,51 @@ func runInteractive(cmd *cobra.Command, opts *rootOptions, cfg domain.Config) er
 	return runBookmarkListing(bookmarks, cfg, bmManager)
 }
 
+func sortBookmarks(bookmarks []domain.Bookmark, sortBy string) {
+	switch sortBy {
+	case "newest":
+		// Sort by CreatedAt descending (newest first)
+		for i := 0; i < len(bookmarks)-1; i++ {
+			for j := i + 1; j < len(bookmarks); j++ {
+				if bookmarks[i].CreatedAt.Before(bookmarks[j].CreatedAt) {
+					bookmarks[i], bookmarks[j] = bookmarks[j], bookmarks[i]
+				}
+			}
+		}
+	case "oldest", "latest":
+		// Sort by CreatedAt ascending (oldest first)
+		for i := 0; i < len(bookmarks)-1; i++ {
+			for j := i + 1; j < len(bookmarks); j++ {
+				if bookmarks[i].CreatedAt.After(bookmarks[j].CreatedAt) {
+					bookmarks[i], bookmarks[j] = bookmarks[j], bookmarks[i]
+				}
+			}
+		}
+	case "a-z", "A to Z":
+		// Sort by Alias ascending (A-Z)
+		for i := 0; i < len(bookmarks)-1; i++ {
+			for j := i + 1; j < len(bookmarks); j++ {
+				if strings.ToLower(bookmarks[i].Alias) > strings.ToLower(bookmarks[j].Alias) {
+					bookmarks[i], bookmarks[j] = bookmarks[j], bookmarks[i]
+				}
+			}
+		}
+	case "z-a", "Z to A":
+		// Sort by Alias descending (Z-A)
+		for i := 0; i < len(bookmarks)-1; i++ {
+			for j := i + 1; j < len(bookmarks); j++ {
+				if strings.ToLower(bookmarks[i].Alias) < strings.ToLower(bookmarks[j].Alias) {
+					bookmarks[i], bookmarks[j] = bookmarks[j], bookmarks[i]
+				}
+			}
+		}
+	}
+}
+
 func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManager *bookmark.Manager) error {
+	// Sort bookmarks based on config
+	sortBookmarks(bookmarks, cfg.DefaultSortBy)
+	
 	items := make([]list.Item, 0, len(bookmarks))
 	for _, bm := range bookmarks {
 		items = append(items, bookmarkItem{Bookmark: bm, Config: cfg})

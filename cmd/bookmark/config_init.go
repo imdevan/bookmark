@@ -67,11 +67,25 @@ func runConfigInit(cmd *cobra.Command, opts *configInitOptions) error {
 
 func renderConfigTemplate(cfg domain.Config) string {
 	var builder strings.Builder
-	builder.WriteString("# Generic CLI Tool Configuration\n\n")
+	builder.WriteString("# Bookmark Manager Configuration\n\n")
 	builder.WriteString("# General\n")
 	builder.WriteString(fmt.Sprintf("# editor = %q\n", cfg.Editor))
 	builder.WriteString("\n# CLI behavior\n")
 	builder.WriteString(fmt.Sprintf("# interactive_default = %t\n", cfg.InteractiveDefault))
+	
+	builder.WriteString("\n# Bookmark settings\n")
+	builder.WriteString(fmt.Sprintf("# bookmark_file = %q\n", cfg.BookmarkFile))
+	builder.WriteString(fmt.Sprintf("# navigation_tool = %q  # Options: cd, z, zoxide, none\n", cfg.NavigationTool))
+	builder.WriteString(fmt.Sprintf("# shell = %q  # Options: bash, zsh, fish, nu\n", cfg.Shell))
+	
+	builder.WriteString("\n# Auto-alias generation\n")
+	builder.WriteString(fmt.Sprintf("# auto_alias_separator = %q  # Character between first letters (empty = \"mcp\", \"-\" = \"m-c-p\")\n", cfg.AutoAliasSeparator))
+	builder.WriteString(fmt.Sprintf("# auto_alias_lowercase = %t\n", cfg.AutoAliasLowercase))
+	
+	builder.WriteString("\n# Display\n")
+	builder.WriteString(fmt.Sprintf("# home_icon = %q  # Icon to represent home directory in list view (can be nerd font icon like \"\")\n", cfg.HomeIcon))
+	builder.WriteString(fmt.Sprintf("# default_sort_by = %q  # Options: newest, oldest, a-z, z-a\n", cfg.DefaultSortBy))
+	
 	builder.WriteString("\n# UI\n")
 	builder.WriteString("# list_spacing options: compact (title only), tight (title + description, no margin), space (default, with spacing)\n")
 	builder.WriteString(fmt.Sprintf("# list_spacing = %q\n", cfg.ListSpacing))
