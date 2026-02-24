@@ -237,7 +237,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       bookmark b -> ~/Documents/bar created
         ```
 
-1.11 -T/Tmux flag 
+- [ ] 1.11 -T/Tmux flag 
   - pass alternate rename variable
     - example:
       ```bash
@@ -251,7 +251,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
 
 
-  - [ ] 1.11 Alias creation
+  - [ ] 1.12 Alias creation
     - aliases should always:
       - navigate to folder
       - then rename tmux if present
@@ -261,8 +261,8 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - this structure should be relied on to use to format the alias visually in the ui
 
 
-  - [ ] 1.11 root tests
-    - Test all features from task 1 through 1.7 (only)
+  - [ ] 1.13 root tests
+    - Test all features from task 1.01 through 1.7 (only)
 
 - [ ] 2. Interactive Bookmark Browser
 ---
