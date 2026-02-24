@@ -287,15 +287,11 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - show associated functions
     - [x] 2.1.3 show tmux rename  name
     \uebc8
-    - [ ] 2.1.4 show editor functions using nerd font icon for given editor  name
-    2.1.5 Define row under description and location metadata
+    - [ ] 2.1.5 Define row under description and location metadata
       - metadata contains: all associated "function" calls
       - e.g.: tmux,  script, editor open, shell # show shell last here
      name   name (/e691) some shell function
-    - [ ] 2.1.4 show editor functions using nerd font icon for given editor  name
-
-
-
+      - show editor with configured editor
 
   - [ ] 2.2 CRUD operations in interactive mode
     - notes: Support Create, Read, Update, Delete actions from the list view
