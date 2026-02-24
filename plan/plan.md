@@ -251,7 +251,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
 
 
-  - [ ] 1.12 Alias creation
+  - [x] 1.12 Alias creation
     - aliases should always:
       - navigate to folder
       - then rename tmux if present
@@ -262,7 +262,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
 
   - [ ] 1.13 root tests
-    - Test all features from task 1.01 through 1.7 (only)
+    - Reasonably test all features from task 1.01 through 1.7 (only)
 
 - [ ] 2. Interactive Bookmark Browser
 ---
@@ -294,7 +294,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       - `q`: or `Esc`: Quit
     - example: Press `d` → `? Delete bookmark 'proj'? (y/N)`
 
-    - [ ] 2.2.1 enter: Enter`: Navigate to selected bookmark
+    - [ ] 2.2.1 enter: Enter`: should execute defined alias (and all associated operations)
     - [ ] 2.2.2 e: open selected book mark in editor # DO NOT IMPLEMENT
             - resource bookmarks on save (if in nvim)
             - alternative: open alias in input box to edit
