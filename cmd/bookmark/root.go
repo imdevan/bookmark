@@ -37,6 +37,7 @@ type rootOptions struct {
 	file        string
 	edit        bool
 	execute     string
+	source      string
 }
 
 var rootCmd = newRootCmd()
@@ -101,6 +102,7 @@ func newRootCmd() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.file, "file", "f", "", "file to open in editor after navigation")
 	cmd.Flags().BoolVarP(&opts.edit, "edit", "e", false, "open bookmarks file in editor")
 	cmd.Flags().StringVarP(&opts.execute, "execute", "x", "", "command to execute after navigation")
+	cmd.Flags().StringVarP(&opts.source, "source", "s", "", "path to bookmark (instead of current directory)")
 
 	cmd.AddCommand(newConfigCmd())
 	cmd.AddCommand(newCompletionCmd())
@@ -125,8 +127,14 @@ func resolvedVersion() string {
 func runAddBookmark(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Config, cwd string) error {
 	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
 
+	// Use source path if provided, otherwise use current directory
+	targetPath := cwd
+	if opts.source != "" {
+		targetPath = opts.source
+	}
+
 	// Generate or use provided alias
-	alias := generateAlias(args, cwd, cfg)
+	alias := generateAlias(args, targetPath, cfg)
 
 	// Check if bookmark exists and handle confirmation
 	exists, err := bmManager.Exists(alias)
@@ -140,12 +148,12 @@ func runAddBookmark(cmd *cobra.Command, args []string, opts *rootOptions, cfg do
 	}
 
 	// Create and save bookmark
-	bm := buildBookmark(alias, cwd, opts)
+	bm := buildBookmark(alias, targetPath, opts)
 	if err := bmManager.Add(bm); err != nil {
 		return err
 	}
 
-	printSuccess(cmd, alias, cwd, exists)
+	printSuccess(cmd, alias, targetPath, exists)
 	return nil
 }
 

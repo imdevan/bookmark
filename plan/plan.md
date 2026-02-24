@@ -226,7 +226,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       
 
 
-  - [ ] 1.10 -s/source flag (or b/bookmark if more appropriate?)
+  - [x] 1.10 -s/source flag (or b/bookmark if more appropriate?)
     - location to bookmark 
     - example:
       ```bash
