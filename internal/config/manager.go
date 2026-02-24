@@ -99,6 +99,11 @@ type partialConfig struct {
 	Border               *string `toml:"border"`
 	InteractiveDefault   *bool   `toml:"interactive_default"`
 	ListSpacing          *string `toml:"list_spacing"`
+	BookmarkFile         *string `toml:"bookmark_file"`
+	NavigationTool       *string `toml:"navigation_tool"`
+	Shell                *string `toml:"shell"`
+	AutoAliasSeparator   *string `toml:"auto_alias_separator"`
+	AutoAliasLowercase   *bool   `toml:"auto_alias_lowercase"`
 }
 
 func readConfig(path string) (*partialConfig, error) {
@@ -158,6 +163,21 @@ func applyPartial(config *domain.Config, partial *partialConfig) {
 	}
 	if partial.ListSpacing != nil {
 		config.ListSpacing = *partial.ListSpacing
+	}
+	if partial.BookmarkFile != nil {
+		config.BookmarkFile = expandPath(*partial.BookmarkFile)
+	}
+	if partial.NavigationTool != nil {
+		config.NavigationTool = *partial.NavigationTool
+	}
+	if partial.Shell != nil {
+		config.Shell = *partial.Shell
+	}
+	if partial.AutoAliasSeparator != nil {
+		config.AutoAliasSeparator = *partial.AutoAliasSeparator
+	}
+	if partial.AutoAliasLowercase != nil {
+		config.AutoAliasLowercase = *partial.AutoAliasLowercase
 	}
 }
 
