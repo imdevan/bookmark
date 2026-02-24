@@ -21,10 +21,20 @@ type Config struct {
 	Border               string `toml:"border"`
 	InteractiveDefault   bool   `toml:"interactive_default"`
 	ListSpacing          string `toml:"list_spacing"`
+	
+	// Bookmark settings
+	BookmarkFile         string `toml:"bookmark_file"`
+	NavigationTool       string `toml:"navigation_tool"`
+	Shell                string `toml:"shell"`
+	AutoAliasSeparator   string `toml:"auto_alias_separator"`
+	AutoAliasLowercase   bool   `toml:"auto_alias_lowercase"`
 }
 
 // DefaultConfig returns the default configuration values.
 func DefaultConfig() Config {
+	home, _ := os.UserHomeDir()
+	bookmarkFile := filepath.Join(home, ".bookmarks", "bookmarks.sh")
+	
 	return Config{
 		Editor:               "nvim",
 		Headings:             "15",
@@ -40,6 +50,11 @@ func DefaultConfig() Config {
 		Border:               "08",
 		InteractiveDefault:   true,
 		ListSpacing:          "space",
+		BookmarkFile:         bookmarkFile,
+		NavigationTool:       "cd",
+		Shell:                "zsh",
+		AutoAliasSeparator:   "",
+		AutoAliasLowercase:   true,
 	}
 }
 
