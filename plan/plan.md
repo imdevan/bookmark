@@ -196,11 +196,15 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       ┌─ Bookmarks ────────────────────────────────────┐
       │ Search: proj_                                  │
       ├────────────────────────────────────────────────┤
-      │ > proj     /home/user/projects/myapp          │
-      │   docs     /home/user/projects/myapp/docs     │
+      │ > proj     ~/projects/myapp                    │
+      │   docs     ~/projects/myapp/docs               │
       └────────────────────────────────────────────────┘
       ```
     - implementation: Use `internal/ui/list.go` pattern with Bubble Tea
+
+    - [ ] 2.1.1 home_symbol = "~" (default) use as standin for $HOME directory
+    - [ ] 2.1.2 default_sort_by = "newist" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
+
 
   - [ ] 2.2 CRUD operations in interactive mode
     - notes: Support Create, Read, Update, Delete actions from the list view
@@ -209,8 +213,18 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       - `e`: Edit selected bookmark
       - `d`: Delete selected bookmark (with confirmation)
       - `n`: Create new bookmark
-      - `q` or `Esc`: Quit
+      - `q`: or `Esc`: Quit
     - example: Press `d` → `? Delete bookmark 'proj'? (y/N)`
+
+    - [ ] 2.2.1 enter: Enter`: Navigate to selected bookmark
+    - [ ] 2.2.2 e: open selected book mark in editor # DO NOT IMPLEMENT
+            - resource bookmarks on save (if in nvim)
+            - alternative: open alias in input box to edit
+    - [ ] 2.2.3 d/D: delete selected bookmark (d: confirmation | D: no conf)
+    - [ ] 2.2.4 n: Create new bookmark
+    - [x] 2.2.5 q`: or `Esc`: Quit
+
+
 
   - [ ] 2.3 Navigate to selected bookmark
     - notes: Select bookmark from list to navigate to that directory
@@ -312,3 +326,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       ```
     - behavior: Falls back to `bookmarks_file` if shell-specific not set
 
+- [ ] 2 pin via comment? 
+    ```
+    alias marker = "cd ~/marker" # Go to marker - pin
+    ```
