@@ -336,7 +336,9 @@ func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManage
 
 	theme := ui.ThemeFromConfig(cfg)
 	delegate := ui.NewListDelegate(theme, ui.ListDelegateOptions{
-		Spacing: cfg.ListSpacing,
+		Spacing:        cfg.ListSpacing,
+		ShowMetadata:   true,
+		MetadataIndent: 1, // Align with path start
 	})
 
 	listModel := ui.NewListModel(items, delegate, 80, 20, theme)
@@ -387,12 +389,34 @@ func (b bookmarkItem) Description() string {
 		desc = b.Bookmark.Description + " • " + desc
 	}
 	
-	// Add tmux window name if present (using nerd font icon)
+	return desc
+}
+
+// Metadata implements ui.ItemWithMetadata interface.
+func (b bookmarkItem) Metadata() string {
+	var parts []string
+	
+	// Tmux window name with icon
 	if b.Bookmark.TmuxWindowName != "" {
-		desc = desc + " • " + icon.Tmux.String() + " " + b.Bookmark.TmuxWindowName
+		parts = append(parts, icon.Tmux.String()+" "+b.Bookmark.TmuxWindowName)
 	}
 	
-	return desc
+	// File to open with icon
+	if b.Bookmark.File != "" {
+		editorIcon := icon.GetEditorIcon(b.Config.Editor)
+		if editorIcon != "" {
+			parts = append(parts, editorIcon.String()+" "+b.Bookmark.File)
+		} else {
+			parts = append(parts, icon.File.String()+" "+b.Bookmark.File)
+		}
+	}
+	
+	// Execute command with icon
+	if b.Bookmark.Execute != "" {
+		parts = append(parts, icon.Script.String()+" "+b.Bookmark.Execute)
+	}
+	
+	return strings.Join(parts, " • ")
 }
 
 func (b bookmarkItem) FilterValue() string {
