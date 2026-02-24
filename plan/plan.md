@@ -313,7 +313,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - [x] 2.2.1 enter: Enter`: should execute defined alias (and all associated operations)
     - [x] 2.2.2 e: open selected book mark in editor
             - resource bookmarks on save (if in nvim)
-    - [ ] 2.2.3 d/D: delete selected bookmark (d: confirmation | D: no conf)
+    - [x] 2.2.3 d/D: delete selected bookmark (d: confirmation | D: no conf)
     - [ ] 2.2.4 n: Create new bookmark
     - [x] 2.2.5 q`: or `Esc`: Quit
 

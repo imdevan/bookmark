@@ -449,6 +449,10 @@ func (m bookmarkListModel) allHelpKeys() []key.Binding {
 			key.WithKeys("d"),
 			key.WithHelp("d", "delete bookmark"),
 		),
+		key.NewBinding(
+			key.WithKeys("D"),
+			key.WithHelp("D", "force delete"),
+		),
 	}
 }
 
@@ -578,6 +582,27 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.confirmModel = &confirmModel
 				m.confirmMode = true
 				return m, confirmModel.Init()
+			}
+		case "D":
+			if item, ok := m.list.SelectedItem().(bookmarkItem); ok {
+				// Force delete without confirmation
+				if err := m.manager.Delete(item.Bookmark.Alias); err != nil {
+					m.message = fmt.Sprintf("✗ Failed to delete: %s", err)
+				} else {
+					m.message = fmt.Sprintf("✓ Deleted: %s", item.Bookmark.Alias)
+
+					// Remove from list
+					items := m.list.Items()
+					filtered := make([]list.Item, 0, len(items))
+					for _, listItem := range items {
+						if bm, ok := listItem.(bookmarkItem); ok {
+							if bm.Bookmark.Alias != item.Bookmark.Alias {
+								filtered = append(filtered, bm)
+							}
+						}
+					}
+					m.list.SetItems(filtered)
+				}
 			}
 		}
 	}
