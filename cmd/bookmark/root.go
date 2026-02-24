@@ -16,7 +16,8 @@ import (
 	"bookmark/internal/domain"
 	pkg "bookmark/internal/package"
 	"bookmark/internal/ui"
-	editor2 "bookmark/internal/adapters/editor"
+	"bookmark/internal/adapters/editor"
+	"bookmark/internal/adapters/icon"
 )
 
 // Metadata loaded from package.toml at build time
@@ -255,13 +256,13 @@ func runEdit(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Co
 	return openEditor(cfg.Editor, cfg.BookmarkFile, lineNum)
 }
 
-func openEditor(editor, filePath string, line int) error {
-	if editor == "" {
+func openEditor(editorName, filePath string, line int) error {
+	if editorName == "" {
 		return fmt.Errorf("no editor configured")
 	}
 
 	// Use the editor adapter
-	editorAdapter := editor2.New(editor)
+	editorAdapter := editor.New(editorName)
 	if line > 0 {
 		return editorAdapter.OpenAtLine(filePath, line)
 	}
@@ -381,9 +382,16 @@ func (b bookmarkItem) Description() string {
 		}
 	}
 	
+	// Add description if present
 	if b.Bookmark.Description != "" {
 		desc = b.Bookmark.Description + " • " + desc
 	}
+	
+	// Add tmux window name if present (using nerd font icon)
+	if b.Bookmark.TmuxWindowName != "" {
+		desc = desc + " • " + icon.Tmux.String() + " " + b.Bookmark.TmuxWindowName
+	}
+	
 	return desc
 }
 

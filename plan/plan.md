@@ -285,7 +285,8 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - [x] 2.1.2 default_sort_by = "newest" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
 
     - show associated functions
-    - [ ] 2.1.3 show tmux rename  name
+    - [x] 2.1.3 show tmux rename  name
+    \uebc8
     - [ ] 2.1.4 show editor functions using nerd font icon for given editor  name
 
 
