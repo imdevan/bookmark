@@ -111,13 +111,13 @@ func TestConfig_StructTags(t *testing.T) {
 	t.Run("has toml tags for all fields", func(t *testing.T) {
 		// This is a regression test to ensure TOML tags don't get accidentally removed
 		cfg := Config{}
-		
+
 		// Set values to ensure struct is properly tagged
 		cfg.Editor = "test"
 		cfg.Primary = "01"
 		cfg.InteractiveDefault = false
 		cfg.ListSpacing = "compact"
-		
+
 		// If this compiles and runs, the struct tags are present
 		if cfg.Editor != "test" {
 			t.Error("Config struct should be properly defined")
