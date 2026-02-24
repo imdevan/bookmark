@@ -311,7 +311,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - example: Press `d` → `? Delete bookmark 'proj'? (y/N)`
 
     - [x] 2.2.1 enter: Enter`: should execute defined alias (and all associated operations)
-    - [ ] 2.2.2 e: open selected book mark in editor
+    - [x] 2.2.2 e: open selected book mark in editor
             - resource bookmarks on save (if in nvim)
     - [ ] 2.2.3 d/D: delete selected bookmark (d: confirmation | D: no conf)
     - [ ] 2.2.4 n: Create new bookmark

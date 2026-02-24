@@ -442,6 +442,10 @@ func (m bookmarkListModel) allHelpKeys() []key.Binding {
 			key.WithHelp("enter", "copy cd command"),
 		),
 		key.NewBinding(
+			key.WithKeys("e"),
+			key.WithHelp("e", "edit bookmark"),
+		),
+		key.NewBinding(
 			key.WithKeys("d"),
 			key.WithHelp("d", "delete bookmark"),
 		),
@@ -528,6 +532,38 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if item, ok := m.list.SelectedItem().(bookmarkItem); ok {
 				cdCmd := fmt.Sprintf("cd %s", item.Bookmark.Path)
 				fmt.Println(cdCmd)
+				return m, tea.Quit
+			}
+		case "e":
+			if item, ok := m.list.SelectedItem().(bookmarkItem); ok {
+				// Find the line number of the bookmark
+				lineNum, err := m.manager.FindBookmarkLine(item.Bookmark.Alias)
+				if err != nil {
+					lineNum = 0
+				}
+				
+				// Get editor from config
+				editorName := editor.ResolveCommand(item.Config.Editor)
+				if editorName == "" {
+					m.message = "✗ No editor configured"
+					return m, nil
+				}
+				
+				// Open editor
+				editorAdapter := editor.New(editorName)
+				var openErr error
+				if lineNum > 0 {
+					openErr = editorAdapter.OpenAtLine(item.Config.BookmarkFile, lineNum)
+				} else {
+					openErr = editorAdapter.Open(item.Config.BookmarkFile)
+				}
+				
+				if openErr != nil {
+					m.message = fmt.Sprintf("✗ Failed to open editor: %s", openErr)
+					return m, nil
+				}
+				
+				// Exit after opening editor
 				return m, tea.Quit
 			}
 		case "d":
