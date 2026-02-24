@@ -310,7 +310,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       - `q`: or `Esc`: Quit
     - example: Press `d` → `? Delete bookmark 'proj'? (y/N)`
 
-    - [ ] 2.2.1 enter: Enter`: should execute defined alias (and all associated operations)
+    - [x] 2.2.1 enter: Enter`: should execute defined alias (and all associated operations)
     - [ ] 2.2.2 e: open selected book mark in editor # DO NOT IMPLEMENT
             - resource bookmarks on save (if in nvim)
             - alternative: open alias in input box to edit
@@ -446,3 +446,5 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     ```
     alias marker = "cd ~/marker" # Go to marker - pin
     ```
+
+- [x] 3 list enter: should execute defined alias (and all associated operations)
