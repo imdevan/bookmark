@@ -157,24 +157,30 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - example: `bookmark` → creates alias "mcp" for `/my/cool/project`
     - example: `bookmark web` → creates alias "web" for current directory
     - output: `✓ Bookmark created: web → /home/user/projects/webapp`
+
   - [x] 1.2 Auto-generate alias from directory name
     - notes: Default naming convention uses first letters of each "word" in current dir
     - example: `/my/cool/project` → `mcp`
     - example: `/home/user/dev` → `hud`
     - example: `/projects/web-app` → `pwa`
+
   - [x] 1.3 Optional custom alias via argument
     - notes: Allow user to pass custom bookmark string: `bookmark my-alias`
     - example: `bookmark web` saves current dir as "web"
     - validation: alias must be alphanumeric + hyphens/underscores only
+
   - [x] 1.4 Confirmation before overwriting existing bookmark
     - notes: Prompt user if alias already exists before replacing
     - example: `? Bookmark 'web' already exists. Overwrite? (y/N)`
     - behavior: default to No, require explicit confirmation
+
   - [ ] 1.5 -y to accept overwrite from flag
     - bypass confirmations
+
   - [ ] 1.6 -f file flag
     - [ ] - f and file to add open file in editor to bookmark, executed after navigation
       - file bookmarks will navigate to folder and open file in configured editor
+
   - [ ] 1.7 -e flag
     - no args: open bookmarks_file in configured editor
     - existing bookmark: open in editor at bookmark line
