@@ -151,6 +151,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 # v0.1.0
 
 - [ ] 1. Core Bookmark Management
+---
   - [x] 1.1 Root command to bookmark current folder
     - notes: `bookmark [alias]` command saves current directory with auto-generated or custom alias
     - example: `bookmark` → creates alias "mcp" for `/my/cool/project`
@@ -180,7 +181,8 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - non-existing bookmark: create and open in editor
 
 - [ ] 2. Interactive Bookmark Browser
-  - [ ] 2.1 `-i` flag to view filterable list of bookmarks
+---
+  - [x] 2.1 `-i` flag to view filterable list of bookmarks
     - notes: Display all bookmarks with search/filter capability using Bubble Tea inline UI
     - example input: `bookmark -i` or `bookmark --interactive`
     - example output:
@@ -193,6 +195,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       └────────────────────────────────────────────────┘
       ```
     - implementation: Use `internal/ui/list.go` pattern with Bubble Tea
+
   - [ ] 2.2 CRUD operations in interactive mode
     - notes: Support Create, Read, Update, Delete actions from the list view
     - keybindings:
@@ -202,17 +205,20 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       - `n`: Create new bookmark
       - `q` or `Esc`: Quit
     - example: Press `d` → `? Delete bookmark 'proj'? (y/N)`
+
   - [ ] 2.3 Navigate to selected bookmark
     - notes: Select bookmark from list to navigate to that directory
     - behavior: Output shell command to stdout for evaluation
     - example output: `cd /home/user/projects/myapp`
 
 - [ ] 3. Advanced Features
+---
   - [ ] 3.1 `-t` flag for tmux window naming
     - notes: Optional flag to define tmux window name when navigating to bookmark
     - example: `bookmark go proj -t myapp`
     - output: `tmux rename-window 'myapp' && cd /home/user/projects/myapp`
     - storage: Save `tmux_window_name` field in bookmark TOML
+
   - [ ] 3.2 Post-jump script execution
     - notes: Define and execute custom scripts after navigation
     - example config in bookmark:
@@ -221,6 +227,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       ```
     - output: `cd /path && source .env && echo 'Welcome!'`
     - validation: Escape shell special characters for safety
+
   - [ ] 3.3 Bookmark descriptions via comments
     - notes: Support adding descriptions/comments to bookmarks for documentation
     - example: `bookmark web --description "Main web application"`
@@ -228,16 +235,19 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - display: Show in list view and interactive browser
 
 - [ ] 4. Configuration System
+---
   - [ ] 4.1 Navigation tool selection
     - notes: Config option to choose navigation method: none, cd, z, zoxide, etc.
     - config field: `navigation_tool = "cd"`
     - valid values: `"cd"`, `"z"`, `"zoxide"`, `"none"`
     - behavior: Changes output command format (e.g., `z /path` vs `cd /path`)
+
   - [ ] 4.2 Shell type configuration
     - notes: Define which shell the user uses (bash, zsh, fish, etc.)
     - config field: `shell = "bash"`
     - valid values: `"bash"`, `"zsh"`, `"fish"`
     - usage: Affects shell-init command output format
+
   - [ ] 4.3 Bookmark storage location
     - notes: Configurable bookmark file location
     - config field: `bookmarks_file = "~/.bookmarks/bookmarks.sh"`
@@ -245,6 +255,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - validation: Expand tilde, create parent directories if needed
 
 - [ ] 5. Shell Integration
+---
   - [ ] 5.1 Generate shell-specific aliases
     - notes: Output shell commands that can be sourced for navigation
     - command: `bookmark shell-init <shell>`
@@ -276,6 +287,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
         end
       end
       ```
+
   - [ ] 5.2 Shell function generation
     - notes: Create wrapper functions for seamless shell integration
     - usage instructions: `eval "$(bookmark shell-init bash)"`
