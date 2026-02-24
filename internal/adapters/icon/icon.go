@@ -10,6 +10,11 @@ const (
 	// Editor icons
 	Nvim Icon = "\uf36f"
 	Vim  Icon = "\uf36f"
+
+	// File/Script icons
+	File   Icon = "\uf15b" // Generic file icon
+	Script Icon = "\ue691" // Script/terminal icon
+	Shell  Icon = "\uf489" // Shell icon
 )
 
 // Get returns the icon as a string
