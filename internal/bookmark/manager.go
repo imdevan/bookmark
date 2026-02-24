@@ -318,7 +318,7 @@ func isValidAlias(alias string) bool {
 	}
 	for _, r := range alias {
 		if !((r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') ||
-			(r >= '0' && r <= '9') || r == '-' || r == '_') {
+			(r >= '0' && r <= '9') || r == '_' || r == '-') {
 			return false
 		}
 	}

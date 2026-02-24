@@ -199,13 +199,19 @@ func TestIsValidAlias(t *testing.T) {
 		valid bool
 	}{
 		{"test", true},
-		{"test-123", true},
+		{"test123", true},
 		{"test_abc", true},
 		{"Test", true},
+		{"test-123", true},       // hyphen is allowed (kebab-case)
+		{"my-bookmark", true},    // kebab-case is valid
+		{"-", true},              // just hyphen is technically valid
 		{"", false},
+		{"test#tag", false},      // hash is blacklisted
 		{"test space", false},
 		{"test@home", false},
 		{"test.dot", false},
+		{"#", false},             // just hash
+		{"tag#1", false},         // contains hash
 	}
 	
 	for _, tt := range tests {
