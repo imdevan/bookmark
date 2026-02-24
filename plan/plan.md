@@ -261,7 +261,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - this structure should be relied on to use to format the alias visually in the ui
 
 
-  - [x] 1.13 root tests
+  - [ ] 1.13 root tests
     - Reasonably test all features from task 1.01 through 1.7 (only)
 
 - [ ] 2. Interactive Bookmark Browser
@@ -280,9 +280,9 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       ```
     - implementation: Use `internal/ui/list.go` pattern with Bubble Tea
 
+    - add configs:
     - [ ] 2.1.1 home_icon = "~" (default) used in list view for home can be nerd font icon
-    - [ ] 2.1.2 home_char = "~" (default) use as standin for $HOME directory
-    - [ ] 2.1.3 default_sort_by = "newist" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
+    - [ ] 2.1.2 default_sort_by = "newist" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
 
 
   - [ ] 2.2 CRUD operations in interactive mode
