@@ -282,7 +282,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
     - add configs:
     - [x] 2.1.1 home_icon = "~" (default) used in list view for home can be nerd font icon
-    - [ ] 2.1.2 default_sort_by = "newest" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
+    - [x] 2.1.2 default_sort_by = "newest" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
 
     - show associated functions
     - [ ] 2.1.3 show tmux rename  name
