@@ -326,13 +326,13 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
 - [ ] 3. Advanced Features
 ---
-  - [ ] 3.1 `-t` flag for tmux window naming
+  - [x] 3.1 `-t` flag for tmux window naming
     - notes: Optional flag to define tmux window name when navigating to bookmark
     - example: `bookmark go proj -t myapp`
     - output: `tmux rename-window 'myapp' && cd /home/user/projects/myapp`
     - storage: Save `tmux_window_name` field in bookmark TOML
 
-  - [ ] 3.2 Post-jump script execution
+  - [x] 3.2 Post-jump script execution
     - notes: Define and execute custom scripts after navigation
     - example config in bookmark:
       ```toml
@@ -341,7 +341,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - output: `cd /path && source .env && echo 'Welcome!'`
     - validation: Escape shell special characters for safety
 
-  - [ ] 3.3 Bookmark descriptions via comments
+  - [x] 3.3 Bookmark descriptions via comments
     - notes: Support adding descriptions/comments to bookmarks for documentation
     - example: `bookmark web --description "Main web application"`
     - storage: Save `description` field in bookmark TOML
