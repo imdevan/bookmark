@@ -194,7 +194,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       alias fb="$nav_command ~/Work/foo-bar && tmux rename-window fb" && $editor plan.md"
       ```
 
-  - [ ] 1.7 -e flag
+  - [x] 1.7 -e flag
     - no args: open bookmarks_file in configured editor
     - existing bookmark: open in editor at bookmark line
     - non-existing bookmark: create and open in editor
@@ -355,6 +355,8 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
   - syncs bookmarks file based on:
     - these should probably just be vars at the top of the bookmarks file
     - config.shell
+      - prioritize first shell in list as source of truth
+      - confirm with user before updating out of sync alternate shells
     - config.home_char
     - config.navigation_tool
     - config.editor

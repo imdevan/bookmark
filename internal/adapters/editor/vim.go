@@ -29,12 +29,75 @@ func IsVim(command string) bool {
 	return strings.Contains(base, "nvim") || strings.Contains(base, "vim") || base == "vi"
 }
 
+func IsNano(command string) bool {
+	fields := strings.Fields(command)
+	if len(fields) == 0 {
+		return false
+	}
+	base := strings.ToLower(filepath.Base(fields[0]))
+	return strings.Contains(base, "nano")
+}
+
+func IsVSCode(command string) bool {
+	fields := strings.Fields(command)
+	if len(fields) == 0 {
+		return false
+	}
+	base := strings.ToLower(filepath.Base(fields[0]))
+	return base == "code" || base == "code-insiders" || base == "codium" || base == "cursor"
+}
+
+func IsEmacs(command string) bool {
+	fields := strings.Fields(command)
+	if len(fields) == 0 {
+		return false
+	}
+	base := strings.ToLower(filepath.Base(fields[0]))
+	return strings.Contains(base, "emacs")
+}
+
 func OpenVimInsert(command, path string, line int) error {
 	fields := strings.Fields(command)
 	if len(fields) == 0 {
 		return errors.New("editor command is required")
 	}
 	args := append(fields[1:], fmt.Sprintf("+call cursor(%d,1)", line), "+startinsert", path)
+	return runEditorCommand(fields[0], args)
+}
+
+func OpenVimAtLine(command, path string, line int) error {
+	fields := strings.Fields(command)
+	if len(fields) == 0 {
+		return errors.New("editor command is required")
+	}
+	args := append(fields[1:], fmt.Sprintf("+%d", line), path)
+	return runEditorCommand(fields[0], args)
+}
+
+func OpenNanoAtLine(command, path string, line int) error {
+	fields := strings.Fields(command)
+	if len(fields) == 0 {
+		return errors.New("editor command is required")
+	}
+	args := append(fields[1:], fmt.Sprintf("+%d", line), path)
+	return runEditorCommand(fields[0], args)
+}
+
+func OpenVSCodeAtLine(command, path string, line int) error {
+	fields := strings.Fields(command)
+	if len(fields) == 0 {
+		return errors.New("editor command is required")
+	}
+	args := append(fields[1:], "-g", fmt.Sprintf("%s:%d", path, line))
+	return runEditorCommand(fields[0], args)
+}
+
+func OpenEmacsAtLine(command, path string, line int) error {
+	fields := strings.Fields(command)
+	if len(fields) == 0 {
+		return errors.New("editor command is required")
+	}
+	args := append(fields[1:], fmt.Sprintf("+%d", line), path)
 	return runEditorCommand(fields[0], args)
 }
 

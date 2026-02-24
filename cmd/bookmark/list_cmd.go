@@ -33,7 +33,7 @@ func newListCmd() *cobra.Command {
 				cfg = domain.DefaultConfig()
 			}
 
-			bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool)
+			bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
 			bookmarks, err := bmManager.Load()
 			if err != nil {
 				return err

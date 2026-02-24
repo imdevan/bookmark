@@ -326,3 +326,45 @@ func expandPath(path string) string {
 	}
 	return os.ExpandEnv(path)
 }
+
+// FindBookmarkLine returns the line number where a bookmark alias is defined in the shell script.
+func (m *Manager) FindBookmarkLine(alias string) (int, error) {
+	data, err := os.ReadFile(m.filePath)
+	if err != nil {
+		return 0, fmt.Errorf("failed to read bookmark file: %w", err)
+	}
+
+	scanner := bufio.NewScanner(strings.NewReader(string(data)))
+	lineNum := 0
+	foundMetadata := false
+	
+	for scanner.Scan() {
+		lineNum++
+		line := strings.TrimSpace(scanner.Text())
+		
+		// Look for the bookmark metadata comment first
+		if strings.HasPrefix(line, "# BM:") {
+			parts := strings.Split(strings.TrimPrefix(line, "# BM: "), "|")
+			if len(parts) > 0 && parts[0] == alias {
+				foundMetadata = true
+				continue
+			}
+		}
+		
+		// If we found the metadata, the next non-empty line should be the alias/function
+		if foundMetadata && line != "" {
+			// Check if this line contains the alias definition
+			if m.shell == "fish" {
+				if strings.HasPrefix(line, "function "+alias) {
+					return lineNum, nil
+				}
+			} else {
+				if strings.HasPrefix(line, "alias "+alias+"=") {
+					return lineNum, nil
+				}
+			}
+		}
+	}
+
+	return 0, ErrBookmarkNotFound
+}

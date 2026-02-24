@@ -16,6 +16,7 @@ import (
 	"bookmark/internal/domain"
 	pkg "bookmark/internal/package"
 	"bookmark/internal/ui"
+	editor2 "bookmark/internal/adapters/editor"
 )
 
 // Metadata loaded from package.toml at build time
@@ -34,6 +35,7 @@ type rootOptions struct {
 	description string
 	yes         bool
 	file        string
+	edit        bool
 }
 
 var rootCmd = newRootCmd()
@@ -74,8 +76,13 @@ func newRootCmd() *cobra.Command {
 			}
 
 			// Interactive mode
-			if opts.interactive || (len(args) == 0 && cfg.InteractiveDefault && !opts.tmux && opts.description == "") {
+			if opts.interactive || (len(args) == 0 && cfg.InteractiveDefault && !opts.tmux && opts.description == "" && !opts.edit) {
 				return runInteractive(cmd, opts, cfg)
+			}
+
+			// Edit mode
+			if opts.edit {
+				return runEdit(cmd, args, opts, cfg)
 			}
 
 			// Add bookmark mode
@@ -91,6 +98,7 @@ func newRootCmd() *cobra.Command {
 	cmd.Flags().StringVarP(&opts.description, "description", "d", "", "bookmark description")
 	cmd.Flags().BoolVarP(&opts.yes, "yes", "y", false, "skip confirmation prompts")
 	cmd.Flags().StringVarP(&opts.file, "file", "f", "", "file to open in editor after navigation")
+	cmd.Flags().BoolVarP(&opts.edit, "edit", "e", false, "open bookmarks file in editor")
 
 	cmd.AddCommand(newConfigCmd())
 	cmd.AddCommand(newCompletionCmd())
@@ -192,6 +200,61 @@ func printSuccess(cmd *cobra.Command, alias, cwd string, isUpdate bool) {
 		action = "updated"
 	}
 	cmd.Printf("✓ Bookmark %s: %s → %s\n", action, alias, cwd)
+}
+
+func runEdit(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Config) error {
+	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
+
+	// If no alias provided, just open the bookmarks file
+	if len(args) == 0 {
+		return openEditor(cfg.Editor, cfg.BookmarkFile, 0)
+	}
+
+	alias := args[0]
+
+	// Check if bookmark exists
+	exists, err := bmManager.Exists(alias)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		// Create new bookmark and open editor
+		cwd, err := os.Getwd()
+		if err != nil {
+			return fmt.Errorf("failed to get working directory: %w", err)
+		}
+
+		bm := buildBookmark(alias, cwd, opts)
+		if err := bmManager.Add(bm); err != nil {
+			return err
+		}
+
+		cmd.Printf("✓ Bookmark created: %s → %s\n", alias, cwd)
+	}
+
+	// Find the line number of the bookmark
+	lineNum, err := bmManager.FindBookmarkLine(alias)
+	if err != nil {
+		// If we can't find the line, just open at the beginning
+		lineNum = 0
+	}
+
+	// Open bookmarks file in editor at the bookmark line
+	return openEditor(cfg.Editor, cfg.BookmarkFile, lineNum)
+}
+
+func openEditor(editor, filePath string, line int) error {
+	if editor == "" {
+		return fmt.Errorf("no editor configured")
+	}
+
+	// Use the editor adapter
+	editorAdapter := editor2.New(editor)
+	if line > 0 {
+		return editorAdapter.OpenAtLine(filePath, line)
+	}
+	return editorAdapter.Open(filePath)
 }
 
 func runInteractive(cmd *cobra.Command, opts *rootOptions, cfg domain.Config) error {
