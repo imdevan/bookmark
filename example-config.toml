@@ -4,12 +4,19 @@ editor = "nvim"
 # CLI behavior
 interactive_default = true
 
+# Bookmark settings
+bookmark_file = "~/.bookmark/bookmarks.sh"
+navigation_tool = "z"                      # Options: cd, z, zoxide, none
+shell = "zsh"                              # Options: bash, zsh, fish, nu
+
+# Auto-alias generation
+auto_alias_separator = ""   # Character between first letters (empty = "mcp", "-" = "m-c-p")
+auto_alias_lowercase = true
+
 # UI
-# list_spacing options: compact (title only), tight (title + description, no margin), space (default, with spacing)
-list_spacing = "space"
+list_spacing = "space" # Options: compact, tight, space
 
 # Colors
-# Colors support named, numeric, or hex values (ex: 7, 13, "#ff8800").
 headings = "15"
 primary = "02"
 secondary = "06"
