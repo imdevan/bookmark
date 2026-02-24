@@ -28,6 +28,7 @@ type Config struct {
 	Shell                string `toml:"shell"`
 	AutoAliasSeparator   string `toml:"auto_alias_separator"`
 	AutoAliasLowercase   bool   `toml:"auto_alias_lowercase"`
+	HomeIcon             string `toml:"home_icon"`
 }
 
 // DefaultConfig returns the default configuration values.
@@ -55,6 +56,7 @@ func DefaultConfig() Config {
 		Shell:                "zsh",
 		AutoAliasSeparator:   "",
 		AutoAliasLowercase:   true,
+		HomeIcon:             "~",
 	}
 }
 

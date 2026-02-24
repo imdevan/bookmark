@@ -281,7 +281,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - implementation: Use `internal/ui/list.go` pattern with Bubble Tea
 
     - add configs:
-    - [ ] 2.1.1 home_icon = "~" (default) used in list view for home can be nerd font icon
+    - [x] 2.1.1 home_icon = "~" (default) used in list view for home can be nerd font icon
     - [ ] 2.1.2 default_sort_by = "newist" (default) | "latest" | "A to Z" | "Z to A" use as standin for $HOME directory
 
     - show associated functions

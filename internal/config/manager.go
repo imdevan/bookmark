@@ -104,6 +104,7 @@ type partialConfig struct {
 	Shell                *string `toml:"shell"`
 	AutoAliasSeparator   *string `toml:"auto_alias_separator"`
 	AutoAliasLowercase   *bool   `toml:"auto_alias_lowercase"`
+	HomeIcon             *string `toml:"home_icon"`
 }
 
 func readConfig(path string) (*partialConfig, error) {
@@ -178,6 +179,9 @@ func applyPartial(config *domain.Config, partial *partialConfig) {
 	}
 	if partial.AutoAliasLowercase != nil {
 		config.AutoAliasLowercase = *partial.AutoAliasLowercase
+	}
+	if partial.HomeIcon != nil {
+		config.HomeIcon = *partial.HomeIcon
 	}
 }
 

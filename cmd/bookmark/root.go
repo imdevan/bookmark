@@ -286,7 +286,7 @@ func runInteractive(cmd *cobra.Command, opts *rootOptions, cfg domain.Config) er
 func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManager *bookmark.Manager) error {
 	items := make([]list.Item, 0, len(bookmarks))
 	for _, bm := range bookmarks {
-		items = append(items, bookmarkItem{Bookmark: bm})
+		items = append(items, bookmarkItem{Bookmark: bm, Config: cfg})
 	}
 
 	theme := ui.ThemeFromConfig(cfg)
@@ -319,6 +319,7 @@ func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManage
 
 type bookmarkItem struct {
 	Bookmark domain.Bookmark
+	Config   domain.Config
 }
 
 func (b bookmarkItem) Title() string {
@@ -327,6 +328,15 @@ func (b bookmarkItem) Title() string {
 
 func (b bookmarkItem) Description() string {
 	desc := b.Bookmark.Path
+	
+	// Replace home directory with home icon
+	if b.Config.HomeIcon != "" {
+		home, err := os.UserHomeDir()
+		if err == nil && strings.HasPrefix(desc, home) {
+			desc = b.Config.HomeIcon + strings.TrimPrefix(desc, home)
+		}
+	}
+	
 	if b.Bookmark.Description != "" {
 		desc = b.Bookmark.Description + " • " + desc
 	}
