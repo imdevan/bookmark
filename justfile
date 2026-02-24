@@ -2,7 +2,7 @@ set shell := ["zsh", "-cu"]
 
 build:
 	go build -o bin/bookmark ./cmd/bookmark
-	@size=$(stat -c %s bin/go-cli-template 2>/dev/null || stat -f %z bin/go-cli-template 2>/dev/null); \
+	@size=$(stat -c %s bin/bookmark 2>/dev/null || stat -f %z bin/bookmark 2>/dev/null); \
 	echo "Build size: $(awk "BEGIN {printf \"%.2f MB\", $size/1048576}")"
 
 build-run:
