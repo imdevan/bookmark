@@ -237,6 +237,19 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       bookmark b -> ~/Documents/bar created
         ```
 
+1.11 -T/Tmux flag 
+  - pass alternate rename variable
+    - example:
+      ```bash
+      cd ~/Work/foo-bar
+
+      bookmark -T bar
+
+      bookmark b -> ~/Documents/bar created
+      tmux rename -> bar
+        ```
+
+
 
   - [ ] 1.11 Alias creation
     - aliases should always:
