@@ -447,3 +447,5 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     ```
 
 - [x] 3 list enter: should execute defined alias (and all associated operations)
+
+4 bookmark list should be more verbose and show associated metadata
