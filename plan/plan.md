@@ -177,8 +177,8 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
   - [x] 1.5 -y to accept overwrite from flag
     - bypass confirmations
 
-  - [ ] 1.6 -f file flag
-    - [ ] - f and file to add open file in editor to bookmark, executed after navigation
+  - [x] 1.6 -f file flag
+    - [x] - f and file to add open file in editor to bookmark, executed after navigation
       - file bookmarks will navigate to folder and open file in configured editor
     - example:
       ```bash

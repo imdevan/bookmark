@@ -11,6 +11,7 @@ type Bookmark struct {
 	UpdatedAt       time.Time `toml:"updated_at"`
 	TmuxWindowName  string    `toml:"tmux_window_name,omitempty"`
 	PostJumpScript  string    `toml:"post_jump_script,omitempty"`
+	File            string    `toml:"file,omitempty"`
 }
 
 // BookmarkStore represents the TOML file structure.

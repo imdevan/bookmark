@@ -33,6 +33,7 @@ type rootOptions struct {
 	tmuxName    string
 	description string
 	yes         bool
+	file        string
 }
 
 var rootCmd = newRootCmd()
@@ -89,6 +90,7 @@ func newRootCmd() *cobra.Command {
 	cmd.Flags().StringVar(&opts.tmuxName, "tmux-name", "", "custom tmux window name")
 	cmd.Flags().StringVarP(&opts.description, "description", "d", "", "bookmark description")
 	cmd.Flags().BoolVarP(&opts.yes, "yes", "y", false, "skip confirmation prompts")
+	cmd.Flags().StringVarP(&opts.file, "file", "f", "", "file to open in editor after navigation")
 
 	cmd.AddCommand(newConfigCmd())
 	cmd.AddCommand(newCompletionCmd())
@@ -111,7 +113,7 @@ func resolvedVersion() string {
 }
 
 func runAddBookmark(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Config, cwd string) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
 
 	// Generate or use provided alias
 	alias := generateAlias(args, cwd, cfg)
@@ -170,6 +172,7 @@ func buildBookmark(alias, cwd string, opts *rootOptions) domain.Bookmark {
 		Alias:       alias,
 		Path:        cwd,
 		Description: opts.description,
+		File:        opts.file,
 	}
 
 	// Handle tmux settings
@@ -192,7 +195,7 @@ func printSuccess(cmd *cobra.Command, alias, cwd string, isUpdate bool) {
 }
 
 func runInteractive(cmd *cobra.Command, opts *rootOptions, cfg domain.Config) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
 	bookmarks, err := bmManager.Load()
 	if err != nil {
 		return err

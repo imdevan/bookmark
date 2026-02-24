@@ -22,14 +22,16 @@ type Manager struct {
 	filePath string
 	shell    string
 	navTool  string
+	editor   string
 }
 
 // NewManager creates a new bookmark manager.
-func NewManager(filePath string, shell string, navTool string) *Manager {
+func NewManager(filePath string, shell string, navTool string, editor string) *Manager {
 	return &Manager{
 		filePath: expandPath(filePath),
 		shell:    shell,
 		navTool:  navTool,
+		editor:   editor,
 	}
 }
 
@@ -68,7 +70,7 @@ func (m *Manager) parseShellScript(content string) ([]domain.Bookmark, error) {
 			}
 			currentBookmark = &domain.Bookmark{}
 			
-			// Parse metadata: # BM: alias|path|desc|created|updated|tmux|postscript
+			// Parse metadata: # BM: alias|path|desc|created|updated|tmux|postscript|file
 			parts := strings.Split(strings.TrimPrefix(line, "# BM: "), "|")
 			if len(parts) >= 2 {
 				currentBookmark.Alias = parts[0]
@@ -88,6 +90,9 @@ func (m *Manager) parseShellScript(content string) ([]domain.Bookmark, error) {
 			}
 			if len(parts) >= 7 {
 				currentBookmark.PostJumpScript = parts[6]
+			}
+			if len(parts) >= 8 {
+				currentBookmark.File = parts[7]
 			}
 		}
 	}
@@ -118,7 +123,7 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 	
 	for _, bm := range bookmarks {
 		// Write metadata as comment
-		metadata := fmt.Sprintf("# BM: %s|%s|%s|%s|%s|%s|%s\n",
+		metadata := fmt.Sprintf("# BM: %s|%s|%s|%s|%s|%s|%s|%s\n",
 			bm.Alias,
 			bm.Path,
 			bm.Description,
@@ -126,6 +131,7 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 			bm.UpdatedAt.Format(time.RFC3339),
 			bm.TmuxWindowName,
 			bm.PostJumpScript,
+			bm.File,
 		)
 		script.WriteString(metadata)
 		
@@ -164,6 +170,11 @@ func (m *Manager) buildNavigationCommand(bm domain.Bookmark) string {
 	// Post-jump script
 	if bm.PostJumpScript != "" {
 		parts = append(parts, bm.PostJumpScript)
+	}
+	
+	// Open file in editor
+	if bm.File != "" && m.editor != "" {
+		parts = append(parts, fmt.Sprintf("%s %s", m.editor, bm.File))
 	}
 	
 	return strings.Join(parts, " && ")
