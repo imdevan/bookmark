@@ -32,6 +32,7 @@ type rootOptions struct {
 	tmux        bool
 	tmuxName    string
 	description string
+	yes         bool
 }
 
 var rootCmd = newRootCmd()
@@ -87,6 +88,7 @@ func newRootCmd() *cobra.Command {
 	cmd.Flags().BoolVarP(&opts.tmux, "tmux", "t", false, "set tmux window name (same as alias)")
 	cmd.Flags().StringVar(&opts.tmuxName, "tmux-name", "", "custom tmux window name")
 	cmd.Flags().StringVarP(&opts.description, "description", "d", "", "bookmark description")
+	cmd.Flags().BoolVarP(&opts.yes, "yes", "y", false, "skip confirmation prompts")
 
 	cmd.AddCommand(newConfigCmd())
 	cmd.AddCommand(newCompletionCmd())
@@ -112,43 +114,58 @@ func runAddBookmark(cmd *cobra.Command, args []string, opts *rootOptions, cfg do
 	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool)
 
 	// Generate or use provided alias
-	var alias string
-	if len(args) > 0 {
-		alias = args[0]
-	} else {
-		alias = bookmark.GenerateAlias(cwd, cfg.AutoAliasSeparator, cfg.AutoAliasLowercase)
-	}
+	alias := generateAlias(args, cwd, cfg)
 
-	// Check if bookmark exists
+	// Check if bookmark exists and handle confirmation
 	exists, err := bmManager.Exists(alias)
 	if err != nil {
 		return err
 	}
 
-	if exists {
-		existing, _ := bmManager.Get(alias)
-		theme := ui.ThemeFromConfig(cfg)
-		confirmModel := ui.NewConfirmationModel(
-			"Overwrite Bookmark",
-			fmt.Sprintf("Bookmark '%s → %s' already exists. Overwrite?", alias, existing.Path),
-			theme,
-		)
-
-		p := tea.NewProgram(confirmModel, tea.WithoutSignalHandler())
-		result, err := p.Run()
-		if err != nil {
-			return err
-		}
-
-		if confirmResult, ok := result.(ui.ConfirmationModel); ok {
-			if !confirmResult.ChoiceValue() {
-				cmd.Println("Cancelled")
-				return nil
-			}
-		}
+	if exists && !opts.yes && !confirmOverwrite(cmd, bmManager, alias, cfg) {
+		cmd.Println("Cancelled")
+		return nil
 	}
 
-	// Create bookmark
+	// Create and save bookmark
+	bm := buildBookmark(alias, cwd, opts)
+	if err := bmManager.Add(bm); err != nil {
+		return err
+	}
+
+	printSuccess(cmd, alias, cwd, exists)
+	return nil
+}
+
+func generateAlias(args []string, cwd string, cfg domain.Config) string {
+	if len(args) > 0 {
+		return args[0]
+	}
+	return bookmark.GenerateAlias(cwd, cfg.AutoAliasSeparator, cfg.AutoAliasLowercase)
+}
+
+func confirmOverwrite(cmd *cobra.Command, bmManager *bookmark.Manager, alias string, cfg domain.Config) bool {
+	existing, _ := bmManager.Get(alias)
+	theme := ui.ThemeFromConfig(cfg)
+	confirmModel := ui.NewConfirmationModel(
+		"Overwrite Bookmark",
+		fmt.Sprintf("Bookmark '%s → %s' already exists. Overwrite?", alias, existing.Path),
+		theme,
+	)
+
+	p := tea.NewProgram(confirmModel, tea.WithoutSignalHandler())
+	result, err := p.Run()
+	if err != nil {
+		return false
+	}
+
+	if confirmResult, ok := result.(ui.ConfirmationModel); ok {
+		return confirmResult.ChoiceValue()
+	}
+	return false
+}
+
+func buildBookmark(alias, cwd string, opts *rootOptions) domain.Bookmark {
 	bm := domain.Bookmark{
 		Alias:       alias,
 		Path:        cwd,
@@ -163,17 +180,15 @@ func runAddBookmark(cmd *cobra.Command, args []string, opts *rootOptions, cfg do
 		bm.TmuxWindowName = opts.tmuxName
 	}
 
-	if err := bmManager.Add(bm); err != nil {
-		return err
-	}
+	return bm
+}
 
-	if exists {
-		cmd.Printf("✓ Bookmark updated: %s → %s\n", alias, cwd)
-	} else {
-		cmd.Printf("✓ Bookmark created: %s → %s\n", alias, cwd)
+func printSuccess(cmd *cobra.Command, alias, cwd string, isUpdate bool) {
+	action := "created"
+	if isUpdate {
+		action = "updated"
 	}
-
-	return nil
+	cmd.Printf("✓ Bookmark %s: %s → %s\n", action, alias, cwd)
 }
 
 func runInteractive(cmd *cobra.Command, opts *rootOptions, cfg domain.Config) error {
