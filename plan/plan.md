@@ -319,12 +319,12 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - [x] 2.2.5 q`: or `Esc`: Quit
 
 
-  - [ ] 2.3 Navigate to selected bookmark
+  - [x] 2.3 Navigate to selected bookmark
     - notes: Select bookmark from list to navigate to that directory
     - behavior: Output shell command to stdout for evaluation
     - example output: `cd /home/user/projects/myapp`
 
-  - [ ] 2.4 Add interact_alias prop config
+  - [x] 2.4 Add interact_alias prop config
     - interactive_alias = "bm" default
     - if set adds bm function (currently ./bm.sh)
     - add to the top of the bookmarks alias file. adapt for configured shell
