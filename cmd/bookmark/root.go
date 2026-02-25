@@ -551,8 +551,8 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, tea.Quit
 			case "enter":
 				if item, ok := m.list.SelectedItem().(bookmarkItem); ok {
-					cdCmd := fmt.Sprintf("cd %s", item.Bookmark.Path)
-					fmt.Println(cdCmd)
+					// Execute the alias (which contains the full command)
+					fmt.Println(item.Bookmark.Alias)
 					return m, tea.Quit
 				}
 			case "e", "n", "d", "D":
@@ -573,8 +573,8 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		case "enter":
 			if item, ok := m.list.SelectedItem().(bookmarkItem); ok {
-				cdCmd := fmt.Sprintf("cd %s", item.Bookmark.Path)
-				fmt.Println(cdCmd)
+				// Execute the alias (which contains the full command)
+				fmt.Println(item.Bookmark.Alias)
 				return m, tea.Quit
 			}
 		case "e":

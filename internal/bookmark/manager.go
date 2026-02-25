@@ -164,7 +164,7 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 		script.WriteString(metadata)
 
 		// Write shell alias/function using adapter
-		cmd := m.buildNavigationCommand(bm)
+		cmd := m.BuildNavigationCommand(bm)
 		aliasStr := m.shellAdapter.FormatAlias(bm.Alias, cmd)
 		script.WriteString(aliasStr)
 	}
@@ -236,9 +236,9 @@ func (m *Manager) generateInteractiveWrapper(functionName string) string {
 	return wrapper.String()
 }
 
-// buildNavigationCommand constructs the full command for a bookmark.
+// BuildNavigationCommand constructs the full command for a bookmark.
 // Order: navigate → tmux rename → execute → post-jump → open file
-func (m *Manager) buildNavigationCommand(bm domain.Bookmark) string {
+func (m *Manager) BuildNavigationCommand(bm domain.Bookmark) string {
 	var parts []string
 
 	// 1. Navigation command (always first)
