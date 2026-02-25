@@ -347,7 +347,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - storage: Save `description` field in bookmark TOML
     - display: Show in list view and interactive browser
 
-- [ ] 4. Configuration System
+- [x] 4. Configuration System
 ---
   - [x] 4.1 Navigation tool selection
     - notes: Config option to choose navigation method: none, cd, z, zoxide, etc.
