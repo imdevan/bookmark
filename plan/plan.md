@@ -265,7 +265,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
   - [x] 1.13 root tests
     - Reasonably test all features from task 1.01 through 1.7 (only)
 
-- [ ] 2. Interactive Bookmark Browser
+- [x] 2. Interactive Bookmark Browser
 ---
   - [x] 2.1 `-i` flag to view filterable list of bookmarks
     - notes: Display all bookmarks with search/filter capability using Bubble Tea inline UI
@@ -307,7 +307,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       - `Enter`: Navigate to selected bookmark
       - `e`: Edit selected bookmark
       - `d`: Delete selected bookmark (with confirmation)
-      - `n`: Create new bookmark
+      - ~`n`: Create new bookmark~
       - `q`: or `Esc`: Quit
     - example: Press `d` → `? Delete bookmark 'proj'? (y/N)`
 
@@ -315,7 +315,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - [x] 2.2.2 e: open selected book mark in editor
             - resource bookmarks on save (if in nvim)
     - [x] 2.2.3 d/D: delete selected bookmark (d: confirmation | D: no conf)
-    - [ ] 2.2.4 n: Create new bookmark
+    - [x] 2.2.4 ~n: Create new bookmark~ -> moved to v2
     - [x] 2.2.5 q`: or `Esc`: Quit
 
 
@@ -414,4 +414,5 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - config.navigation_tool
     - config.editor
 
+3 Interactive create new bookmark
 
