@@ -127,7 +127,7 @@ func resolvedVersion() string {
 }
 
 func runAddBookmark(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Config, cwd string) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 
 	// Use source path if provided, otherwise use current directory
 	targetPath := cwd
@@ -216,7 +216,7 @@ func printSuccess(cmd *cobra.Command, alias, cwd string, isUpdate bool) {
 }
 
 func runEdit(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Config) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 
 	// If no alias provided, just open the bookmarks file
 	if len(args) == 0 {
@@ -271,7 +271,7 @@ func openEditor(editorName, filePath string, line int) error {
 }
 
 func runInteractive(cmd *cobra.Command, opts *rootOptions, cfg domain.Config) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	bookmarks, err := bmManager.Load()
 	if err != nil {
 		return err

@@ -13,7 +13,7 @@ func TestNushellAliasFormat(t *testing.T) {
 	tempDir := t.TempDir()
 	bookmarkFile := filepath.Join(tempDir, "bookmarks.nu")
 
-	mgr := NewManager(bookmarkFile, "nu", "cd", "vim", "true")
+	mgr := NewManager(bookmarkFile, "nu", "cd", "vim", "true", "bm")
 	
 	t.Logf("Manager shell: %q", mgr.shell)
 

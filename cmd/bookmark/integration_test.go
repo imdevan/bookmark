@@ -31,7 +31,7 @@ func TestIntegration_BookmarkCurrentDirectory(t *testing.T) {
 
 	// Verify bookmark was created
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bookmarks, err := mgr.Load()
 	if err != nil {
@@ -81,7 +81,7 @@ func TestIntegration_AutoGenerateAlias(t *testing.T) {
 			}
 
 			cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-			mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+			mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 			
 			bookmarks, err := mgr.Load()
 			if err != nil {
@@ -118,7 +118,7 @@ func TestIntegration_CustomAlias(t *testing.T) {
 	}
 
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bookmarks, err := mgr.Load()
 	if err != nil {
@@ -188,7 +188,7 @@ func TestIntegration_OverwriteConfirmation(t *testing.T) {
 
 	// Verify bookmark exists
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	exists, err := mgr.Exists("web")
 	if err != nil {
@@ -231,7 +231,7 @@ func TestIntegration_ForceOverwrite(t *testing.T) {
 
 	// Verify bookmark was updated
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bm, err := mgr.Get("web")
 	if err != nil {
@@ -262,7 +262,7 @@ func TestIntegration_FileFlag(t *testing.T) {
 	}
 
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bookmarks, err := mgr.Load()
 	if err != nil {
@@ -308,7 +308,7 @@ func TestIntegration_ExecuteFlag(t *testing.T) {
 	}
 
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bookmarks, err := mgr.Load()
 	if err != nil {
@@ -344,7 +344,7 @@ func TestIntegration_SourceFlag(t *testing.T) {
 	}
 
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bm, err := mgr.Get("b")
 	if err != nil {
@@ -375,7 +375,7 @@ func TestIntegration_TmuxFlag(t *testing.T) {
 	}
 
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bookmarks, err := mgr.Load()
 	if err != nil {
@@ -418,7 +418,7 @@ func TestIntegration_CombinedFlags(t *testing.T) {
 	}
 
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bm, err := mgr.Get("proj")
 	if err != nil {
@@ -549,7 +549,7 @@ func TestIntegration_EditFlag(t *testing.T) {
 
 	// Verify bookmark exists
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	exists, err := mgr.Exists("fb")
 	if err != nil {
@@ -588,7 +588,7 @@ func TestIntegration_TmuxAutoName(t *testing.T) {
 	}
 
 	cfg := testutil.LoadTestConfig(t, env.ConfigPath)
-	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+	mgr := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 	
 	bookmarks, err := mgr.Load()
 	if err != nil {

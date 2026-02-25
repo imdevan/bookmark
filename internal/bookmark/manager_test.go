@@ -68,7 +68,7 @@ func TestManager_AddAndGet(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "bookmarks.sh")
 	
-	m := NewManager(filePath, "bash", "cd", "nvim", "true")
+	m := NewManager(filePath, "bash", "cd", "nvim", "true", "bm")
 	
 	bookmark := domain.Bookmark{
 		Alias:       "test",
@@ -98,7 +98,7 @@ func TestManager_Update(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "bookmarks.sh")
 	
-	m := NewManager(filePath, "bash", "cd", "nvim", "true")
+	m := NewManager(filePath, "bash", "cd", "nvim", "true", "bm")
 	
 	bookmark := domain.Bookmark{
 		Alias: "test",
@@ -140,7 +140,7 @@ func TestManager_Delete(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "bookmarks.sh")
 	
-	m := NewManager(filePath, "bash", "cd", "nvim", "true")
+	m := NewManager(filePath, "bash", "cd", "nvim", "true", "bm")
 	
 	bookmark := domain.Bookmark{
 		Alias: "test",
@@ -165,7 +165,7 @@ func TestManager_Exists(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "bookmarks.sh")
 	
-	m := NewManager(filePath, "bash", "cd", "nvim", "true")
+	m := NewManager(filePath, "bash", "cd", "nvim", "true", "bm")
 	
 	exists, err := m.Exists("test")
 	if err != nil {

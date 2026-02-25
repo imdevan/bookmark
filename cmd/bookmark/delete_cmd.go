@@ -37,7 +37,7 @@ func newDeleteCmd() *cobra.Command {
 				cfg = domain.DefaultConfig()
 			}
 
-			bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias)
+			bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor, cfg.FunctionAlias, cfg.InteractiveAlias)
 
 			// Check if bookmark exists
 			bm, err := bmManager.Get(alias)

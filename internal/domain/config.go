@@ -33,6 +33,7 @@ type Config struct {
 	HomeIcon             string `toml:"home_icon"`
 	DefaultSortBy        string `toml:"default_sort_by"`
 	FunctionAlias        string `toml:"function_alias"`
+	InteractiveAlias     string `toml:"interactive_alias"`
 }
 
 // DefaultConfig returns the default configuration values.
@@ -64,6 +65,7 @@ func DefaultConfig() Config {
 		HomeIcon:             "~",
 		DefaultSortBy:        "newest",
 		FunctionAlias:        "true",
+		InteractiveAlias:     "bm",
 	}
 }
 

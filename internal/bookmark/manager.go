@@ -20,23 +20,25 @@ var (
 
 // Manager handles bookmark CRUD operations.
 type Manager struct {
-	filePath      string
-	shell         string
-	navTool       string
-	editor        string
-	functionAlias string
-	shellAdapter  *shell.Adapter
+	filePath         string
+	shell            string
+	navTool          string
+	editor           string
+	functionAlias    string
+	interactiveAlias string
+	shellAdapter     *shell.Adapter
 }
 
 // NewManager creates a new bookmark manager.
-func NewManager(filePath string, shellType string, navTool string, editorCmd string, functionAlias string) *Manager {
+func NewManager(filePath string, shellType string, navTool string, editorCmd string, functionAlias string, interactiveAlias string) *Manager {
 	return &Manager{
-		filePath:      expandPath(filePath),
-		shell:         shellType,
-		navTool:       navTool,
-		editor:        editorCmd,
-		functionAlias: functionAlias,
-		shellAdapter:  shell.New(shellType),
+		filePath:         expandPath(filePath),
+		shell:            shellType,
+		navTool:          navTool,
+		editor:           editorCmd,
+		functionAlias:    functionAlias,
+		interactiveAlias: interactiveAlias,
+		shellAdapter:     shell.New(shellType),
 	}
 }
 
@@ -135,8 +137,14 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 		if m.functionAlias != "true" {
 			functionName = m.functionAlias
 		}
-		
+
 		script.WriteString(m.generateFunctionWrapper(functionName))
+		script.WriteString("\n")
+	}
+
+	// Add interactive alias wrapper if enabled
+	if m.interactiveAlias != "" && m.interactiveAlias != "false" {
+		script.WriteString(m.generateInteractiveWrapper(m.interactiveAlias))
 		script.WriteString("\n")
 	}
 
@@ -168,10 +176,10 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 // and auto-sources the bookmarks file after execution.
 func (m *Manager) generateFunctionWrapper(functionName string) string {
 	var wrapper strings.Builder
-	
+
 	wrapper.WriteString("# Function wrapper to auto-source bookmarks after running bookmark commands\n")
 	wrapper.WriteString("# This ensures new/updated bookmarks are immediately available in your shell\n")
-	
+
 	switch m.shell {
 	case "fish":
 		wrapper.WriteString(fmt.Sprintf("function %s\n", functionName))
@@ -185,7 +193,46 @@ func (m *Manager) generateFunctionWrapper(functionName string) string {
 		wrapper.WriteString(fmt.Sprintf("\tcommand %s \"$@\" && source %s\n", functionName, m.filePath))
 		wrapper.WriteString("}\n")
 	}
-	
+
+	return wrapper.String()
+}
+
+// generateInteractiveWrapper creates a shell function for interactive bookmark navigation.
+// This function runs 'bookmark -i' and executes the selected bookmark command.
+func (m *Manager) generateInteractiveWrapper(functionName string) string {
+	var wrapper strings.Builder
+
+	wrapper.WriteString("# Interactive bookmark navigation function\n")
+	wrapper.WriteString("# Displays the TUI and executes the selected bookmark command\n")
+
+	switch m.shell {
+	case "fish":
+		wrapper.WriteString(fmt.Sprintf("function %s\n", functionName))
+		wrapper.WriteString("\tset -x CLICOLOR_FORCE 1\n")
+		wrapper.WriteString("\tset cmd (bookmark -i)\n")
+		wrapper.WriteString("\tif test -n \"$cmd\"\n")
+		wrapper.WriteString("\t\teval $cmd\n")
+		wrapper.WriteString("\tend\n")
+		wrapper.WriteString("end\n")
+	case "nu", "nushell":
+		wrapper.WriteString(fmt.Sprintf("# Note: Nushell interactive wrapper\n"))
+		wrapper.WriteString(fmt.Sprintf("def %s [] {\n", functionName))
+		wrapper.WriteString("\twith-env {CLICOLOR_FORCE: \"1\"} {\n")
+		wrapper.WriteString("\t\tlet cmd = (bookmark -i)\n")
+		wrapper.WriteString("\t\tif ($cmd | is-not-empty) {\n")
+		wrapper.WriteString("\t\t\tnu -c $cmd\n")
+		wrapper.WriteString("\t\t}\n")
+		wrapper.WriteString("\t}\n")
+		wrapper.WriteString("}\n")
+	default: // bash, zsh, sh
+		wrapper.WriteString(fmt.Sprintf("%s() {\n", functionName))
+		wrapper.WriteString("\tlocal cmd=$(CLICOLOR_FORCE=1 bookmark -i)\n")
+		wrapper.WriteString("\tif [[ -n \"$cmd\" ]]; then\n")
+		wrapper.WriteString("\t\teval \"$cmd\"\n")
+		wrapper.WriteString("\tfi\n")
+		wrapper.WriteString("}\n")
+	}
+
 	return wrapper.String()
 }
 
@@ -315,8 +362,8 @@ func GenerateAlias(path string, separator string, lowercase bool) string {
 
 	// Split on common separators
 	parts := strings.FieldsFunc(base, func(r rune) bool {
-return r == '-' || r == '_' || r == ' ' || r == '.'
-})
+		return r == '-' || r == '_' || r == ' ' || r == '.'
+	})
 
 	if len(parts) == 0 {
 		return "bm"

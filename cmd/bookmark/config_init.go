@@ -87,6 +87,12 @@ func renderConfigTemplate(cfg domain.Config) string {
 	builder.WriteString("# Options: \"true\" (use default name \"bookmark\"), \"custom_name\" (use custom function name), \"false\" (disabled)\n")
 	builder.WriteString(fmt.Sprintf("# function_alias = %q\n", cfg.FunctionAlias))
 	
+	builder.WriteString("\n# Interactive alias wrapper\n")
+	builder.WriteString("# When enabled, adds a shell function for interactive bookmark navigation (bookmark -i)\n")
+	builder.WriteString("# The function displays the TUI and executes the selected bookmark command\n")
+	builder.WriteString("# Options: \"bm\" (default), \"custom_name\" (use custom function name), \"false\" (disabled)\n")
+	builder.WriteString(fmt.Sprintf("# interactive_alias = %q\n", cfg.InteractiveAlias))
+	
 	builder.WriteString("\n# Display\n")
 	builder.WriteString(fmt.Sprintf("# home_icon = %q  # Icon to represent home directory in list view (can be nerd font icon like \"\")\n", cfg.HomeIcon))
 	builder.WriteString(fmt.Sprintf("# default_sort_by = %q  # Options: newest, oldest, a-z, z-a\n", cfg.DefaultSortBy))

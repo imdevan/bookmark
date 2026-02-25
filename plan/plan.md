@@ -151,7 +151,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
 # v0.1.0
 
-- [ ] 1. Core Bookmark Management
+- [x] 1. Core Bookmark Management
 ---
   - [x] 1.1 Root command to bookmark current folder
     - notes: `bookmark [alias]` command saves current directory with auto-generated or custom alias
@@ -262,7 +262,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - this structure should be relied on to use to format the alias visually in the ui
 
 
-  - [ ] 1.13 root tests
+  - [x] 1.13 root tests
     - Reasonably test all features from task 1.01 through 1.7 (only)
 
 - [ ] 2. Interactive Bookmark Browser
@@ -323,6 +323,13 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - notes: Select bookmark from list to navigate to that directory
     - behavior: Output shell command to stdout for evaluation
     - example output: `cd /home/user/projects/myapp`
+
+  - [ ] 2.4 Add interact_alias prop config
+    - interactive_alias = "bm" default
+    - if set adds bm function (currently ./bm.sh)
+    - add to the top of the bookmarks alias file. adapt for configured shell
+    - under function_alias
+
 
 - [x] 3. Advanced Features
 ---
@@ -392,7 +399,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
   ```bash
   shell = "zsh", "nu"
 
-# creates:
+  # creates:
   ~/.bookmarks/bookmarks.sh
   ~/.bookmarks/bookmarks.nu
   ```

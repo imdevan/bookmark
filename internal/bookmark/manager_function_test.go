@@ -74,7 +74,7 @@ func TestManager_FunctionWrapperGeneration(t *testing.T) {
 			tmpDir := t.TempDir()
 			filePath := filepath.Join(tmpDir, "bookmarks.sh")
 
-			m := NewManager(filePath, tt.shell, "cd", "nvim", tt.functionAlias)
+			m := NewManager(filePath, tt.shell, "cd", "nvim", tt.functionAlias, "bm")
 
 			// Add a test bookmark
 			bookmark := domain.Bookmark{
@@ -122,7 +122,7 @@ func TestManager_FunctionWrapperSourcesCorrectFile(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "bookmarks.sh")
 
-	m := NewManager(filePath, "bash", "cd", "nvim", "true")
+	m := NewManager(filePath, "bash", "cd", "nvim", "true", "bm")
 
 	bookmark := domain.Bookmark{
 		Alias:     "test",
@@ -163,7 +163,7 @@ func TestManager_FunctionWrapperEmptyAlias(t *testing.T) {
 	tmpDir := t.TempDir()
 	filePath := filepath.Join(tmpDir, "bookmarks.sh")
 
-	m := NewManager(filePath, "bash", "cd", "nvim", "")
+	m := NewManager(filePath, "bash", "cd", "nvim", "", "bm")
 
 	bookmark := domain.Bookmark{
 		Alias:     "test",

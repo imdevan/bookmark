@@ -18,6 +18,12 @@ auto_alias_lowercase = true
 # Options: "true" (use default name "bookmark"), "custom_name" (use custom function name), "false" (disabled)
 function_alias = "true"
 
+# Interactive alias wrapper
+# When enabled, adds a shell function for interactive bookmark navigation (bookmark -i)
+# The function displays the TUI and executes the selected bookmark command
+# Options: "bm" (default), "custom_name" (use custom function name), "false" (disabled)
+interactive_alias = "bm"
+
 # Display
 home_icon = "~"  # Icon to represent home directory in list view (can be nerd font icon like "")
 default_sort_by = "newest"  # Options: newest, oldest, a-z, z-a
