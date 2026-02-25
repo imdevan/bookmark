@@ -368,7 +368,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - valid values: `"bash"`, `"zsh"`, `"fish"`, "nu"
     - usage: Affects shell-init command output format
 
-  - [ ] 4.4 Source bookmarks 
+  - [ ] 4.4 Function alias
       add to config example and init
       function_alias = true (default) | string alias_name | false (do not create function alias will not source bookmarks)
       if true add to top of bookmarks.sh, or relative shell configuration
