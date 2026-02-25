@@ -4,6 +4,9 @@ package icon
 type Icon string
 
 const (
+	// Bookmarks icon
+	Bookmarks Icon = "\uf097"
+
 	// Tmux icon
 	Tmux Icon = "\uebc8"
 
