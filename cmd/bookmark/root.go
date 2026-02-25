@@ -11,13 +11,13 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
+	"bookmark/internal/adapters/editor"
+	"bookmark/internal/adapters/icon"
 	"bookmark/internal/bookmark"
 	"bookmark/internal/config"
 	"bookmark/internal/domain"
 	pkg "bookmark/internal/package"
 	"bookmark/internal/ui"
-	"bookmark/internal/adapters/editor"
-	"bookmark/internal/adapters/icon"
 )
 
 // Metadata loaded from package.toml at build time
@@ -93,7 +93,7 @@ func newRootCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&opts.configPath, "config", "c", "", "config file path")
+	cmd.PersistentFlags().StringVarP(&opts.configPath, "config", "c", "", "config file path")
 	cmd.Flags().BoolVarP(&opts.showVersion, "version", "v", false, "print version information")
 	cmd.Flags().BoolVarP(&opts.interactive, "interactive", "i", false, "interactive bookmark browser")
 	cmd.Flags().BoolVarP(&opts.tmux, "tmux", "t", false, "set tmux window name (same as alias)")
@@ -328,7 +328,7 @@ func sortBookmarks(bookmarks []domain.Bookmark, sortBy string) {
 func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManager *bookmark.Manager) error {
 	// Sort bookmarks based on config
 	sortBookmarks(bookmarks, cfg.DefaultSortBy)
-	
+
 	items := make([]list.Item, 0, len(bookmarks))
 	for _, bm := range bookmarks {
 		items = append(items, bookmarkItem{Bookmark: bm, Config: cfg})
@@ -375,7 +375,7 @@ func (b bookmarkItem) Title() string {
 
 func (b bookmarkItem) Description() string {
 	desc := b.Bookmark.Path
-	
+
 	// Replace home directory with home icon
 	if b.Config.HomeIcon != "" {
 		home, err := os.UserHomeDir()
@@ -383,24 +383,24 @@ func (b bookmarkItem) Description() string {
 			desc = b.Config.HomeIcon + strings.TrimPrefix(desc, home)
 		}
 	}
-	
+
 	// Add description if present
 	if b.Bookmark.Description != "" {
 		desc = b.Bookmark.Description + " • " + desc
 	}
-	
+
 	return desc
 }
 
 // Metadata implements ui.ItemWithMetadata interface.
 func (b bookmarkItem) Metadata() string {
 	var parts []string
-	
+
 	// Tmux window name with icon
 	if b.Bookmark.TmuxWindowName != "" {
 		parts = append(parts, icon.Tmux.String()+" "+b.Bookmark.TmuxWindowName)
 	}
-	
+
 	// File to open with icon
 	if b.Bookmark.File != "" {
 		editorIcon := icon.GetEditorIcon(b.Config.Editor)
@@ -410,12 +410,12 @@ func (b bookmarkItem) Metadata() string {
 			parts = append(parts, icon.File.String()+" "+b.Bookmark.File)
 		}
 	}
-	
+
 	// Execute command with icon
 	if b.Bookmark.Execute != "" {
 		parts = append(parts, icon.Script.String()+" "+b.Bookmark.Execute)
 	}
-	
+
 	return strings.Join(parts, " • ")
 }
 
@@ -445,7 +445,7 @@ func (m bookmarkListModel) allHelpKeys() []key.Binding {
 			),
 		}
 	}
-	
+
 	return []key.Binding{
 		key.NewBinding(
 			key.WithKeys("enter"),
@@ -580,14 +580,14 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if err != nil {
 					lineNum = 0
 				}
-				
+
 				// Get editor from config
 				editorName := editor.ResolveCommand(item.Config.Editor)
 				if editorName == "" {
 					m.message = "✗ No editor configured"
 					return m, nil
 				}
-				
+
 				// Open editor
 				editorAdapter := editor.New(editorName)
 				var openErr error
@@ -596,12 +596,12 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				} else {
 					openErr = editorAdapter.Open(item.Config.BookmarkFile())
 				}
-				
+
 				if openErr != nil {
 					m.message = fmt.Sprintf("✗ Failed to open editor: %s", openErr)
 					return m, nil
 				}
-				
+
 				// Exit after opening editor
 				return m, tea.Quit
 			}

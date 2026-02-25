@@ -17,7 +17,7 @@ func TestRootCommandHasVersion(t *testing.T) {
 
 func TestRootCommandHasConfig(t *testing.T) {
 	cmd := newRootCmd()
-	configFlag := cmd.Flags().Lookup("config")
+	configFlag := cmd.PersistentFlags().Lookup("config")
 	if configFlag == nil {
 		t.Fatal("expected --config flag to be registered")
 	}
