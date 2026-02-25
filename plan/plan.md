@@ -95,6 +95,7 @@ proj     /home/user/projects/myapp          Main application project
 docs     /home/user/projects/myapp/docs     Documentation folder
 web      /home/user/projects/webapp
 scripts  /home/user/scripts
+```
 
 ## 4. Navigate to Bookmark
 
