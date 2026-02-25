@@ -13,6 +13,7 @@ import (
 
 	"bookmark/internal/adapters/editor"
 	"bookmark/internal/adapters/icon"
+	"bookmark/internal/adapters/tty"
 	"bookmark/internal/bookmark"
 	"bookmark/internal/config"
 	"bookmark/internal/domain"
@@ -356,7 +357,10 @@ func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManage
 	model.list.AdditionalShortHelpKeys = model.getShortHelpKeys
 	model.list.AdditionalFullHelpKeys = model.allHelpKeys
 
-	p := tea.NewProgram(model, tea.WithoutSignalHandler())
+	// Get program options with TTY redirection when needed
+	opts := tty.GetProgramOptions(tea.WithoutSignalHandler())
+
+	p := tea.NewProgram(model, opts...)
 	if _, err := p.Run(); err != nil {
 		return fmt.Errorf("failed to run interactive list: %w", err)
 	}
