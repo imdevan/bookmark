@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"bookmark/internal/adapters/shell"
 	"bookmark/internal/domain"
 )
 
@@ -22,16 +23,18 @@ type Manager struct {
 	filePath string
 	shell    string
 	navTool  string
-	editor   string
+	editor       string
+	shellAdapter *shell.Adapter
 }
 
 // NewManager creates a new bookmark manager.
-func NewManager(filePath string, shell string, navTool string, editor string) *Manager {
+func NewManager(filePath string, shellType string, navTool string, editorCmd string) *Manager {
 	return &Manager{
 		filePath: expandPath(filePath),
-		shell:    shell,
+		shell:    shellType,
 		navTool:  navTool,
-		editor:   editor,
+		editor:       editorCmd,
+		shellAdapter: shell.New(shellType),
 	}
 }
 
@@ -139,17 +142,10 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 		)
 		script.WriteString(metadata)
 
-		// Write shell alias/function
+		// Write shell alias/function using adapter
 		cmd := m.buildNavigationCommand(bm)
-
-		switch m.shell {
-		case "fish":
-			script.WriteString(fmt.Sprintf("function %s\n", bm.Alias))
-			script.WriteString(fmt.Sprintf("    %s\n", cmd))
-			script.WriteString("end\n\n")
-		default: // bash, zsh, sh
-			script.WriteString(fmt.Sprintf("alias %s='%s'\n\n", bm.Alias, escapeShellString(cmd)))
-		}
+		aliasStr := m.shellAdapter.FormatAlias(bm.Alias, cmd)
+		script.WriteString(aliasStr)
 	}
 
 	return os.WriteFile(m.filePath, []byte(script.String()), 0o644)
@@ -188,10 +184,6 @@ func (m *Manager) buildNavigationCommand(bm domain.Bookmark) string {
 	}
 
 	return strings.Join(parts, " && ")
-}
-
-func escapeShellString(s string) string {
-	return strings.ReplaceAll(s, "'", "'\\''")
 }
 
 // Add creates or updates a bookmark.
@@ -285,8 +277,8 @@ func GenerateAlias(path string, separator string, lowercase bool) string {
 
 	// Split on common separators
 	parts := strings.FieldsFunc(base, func(r rune) bool {
-		return r == '-' || r == '_' || r == ' ' || r == '.'
-	})
+return r == '-' || r == '_' || r == ' ' || r == '.'
+})
 
 	if len(parts) == 0 {
 		return "bm"

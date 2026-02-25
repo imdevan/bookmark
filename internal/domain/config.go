@@ -3,6 +3,8 @@ package domain
 import (
 	"os"
 	"path/filepath"
+
+	shelladapter "bookmark/internal/adapters/shell"
 )
 
 // Config describes the resolved configuration.
@@ -36,6 +38,7 @@ type Config struct {
 func DefaultConfig() Config {
 	home, _ := os.UserHomeDir()
 	bookmarkLocation := filepath.Join(home, ".bookmarks")
+	detectedShell := shelladapter.DetectShell()
 	
 	return Config{
 		Editor:               "nvim",
@@ -54,7 +57,7 @@ func DefaultConfig() Config {
 		ListSpacing:          "space",
 		BookmarkLocation:     bookmarkLocation,
 		NavigationTool:       "cd",
-		Shell:                "zsh",
+		Shell:                detectedShell,
 		AutoAliasSeparator:   "",
 		AutoAliasLowercase:   true,
 		HomeIcon:             "~",
