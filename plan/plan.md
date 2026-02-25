@@ -356,16 +356,17 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - valid values: `"cd"`, `"z"`, `"zoxide"`, `"none"`
     - behavior: Changes output command format (e.g., `z /path` vs `cd /path`)
 
-  - [ ] 4.2 Shell type configuration
+  - [ ] 4.2 Bookmark storage location
+    - notes: Configurable bookmark file location
+    - config field: `bookmarks_location = "~/.bookmarks/"`
+    - default: `~/.bookmarks/`
+    bookmark file will be based on shell: e.g.  `~/.bookmarks/bookmarks.sh`
+
+  - [ ] 4.3 Shell type configuration
     - notes: Define which shell the user uses (bash, zsh, fish, etc.)
     - config field: `shell = "zsh"`
     - valid values: `"bash"`, `"zsh"`, `"fish"`, "nu"
     - usage: Affects shell-init command output format
-
-  - [ ] 4.3 Bookmark storage location
-    - notes: Configurable bookmark file location
-    - config field: `bookmarks_location = "~/.bookmarks/"`
-    - default: `~/.bookmarks/`
 
   - [ ] 4.4 Support multiple shell types 
     - example: 
