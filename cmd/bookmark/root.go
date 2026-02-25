@@ -343,7 +343,7 @@ func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManage
 	})
 
 	listModel := ui.NewListModel(items, delegate, 80, 20, theme)
-	listModel.Title = "Bookmarks"
+	listModel.Title = icon.Bookmarks.String() + " Bookmarks"
 	listModel.SetShowStatusBar(true)
 	listModel.SetFilteringEnabled(true)
 

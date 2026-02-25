@@ -3,9 +3,10 @@ package ui
 import (
 	"io"
 
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 // ItemWithMetadata is an optional interface that list items can implement
@@ -50,6 +51,15 @@ func ApplyListStyles(model *list.Model, theme Theme) {
 	model.Styles.ActivePaginationDot = model.Styles.ActivePaginationDot.Foreground(theme.Secondary)
 	model.Styles.InactivePaginationDot = model.Styles.InactivePaginationDot.Foreground(theme.Muted)
 	model.Styles.DividerDot = model.Styles.DividerDot.Foreground(theme.Muted)
+	
+	// Title style: primary color, bold, no background, left aligned
+	model.Styles.Title = model.Styles.Title.
+		Foreground(theme.Primary).
+		Background(nil).
+		Bold(true).
+		Align(lipgloss.Left).
+		Padding(0).
+		Margin(0)
 }
 
 // ApplyListFilterStyles sets shared filter styles for lists.
