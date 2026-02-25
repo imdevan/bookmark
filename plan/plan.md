@@ -368,6 +368,20 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - valid values: `"bash"`, `"zsh"`, `"fish"`, "nu"
     - usage: Affects shell-init command output format
 
+  - [ ] 4.4 Source bookmarks 
+      source_bookmarks = true (default) | false
+      if true add to top of bookmarks.sh, or relative shell configuration
+      add comments indicating what is happening and why
+      ```bash
+      bookmark() {
+        command bookmark "$@" && source ~/.bookmarks/bookmarks.sh
+      }
+      ```
+
+
+
+
+
 
 - [ ] 5. Bookmark sync
 --------------------------------------------------------------------------------
