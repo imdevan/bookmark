@@ -361,7 +361,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - default: `~/.bookmarks/`
     bookmark file will be based on shell: e.g.  `~/.bookmarks/bookmarks.sh`
 
-  - [ ] 4.3 Shell type configuration
+  - [x] 4.3 Shell type configuration
     - config.editor
     - notes: Define which shell the user uses (bash, zsh, fish, etc.)
     - config field: `shell = "zsh"`
