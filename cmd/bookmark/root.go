@@ -436,6 +436,16 @@ type bookmarkListModel struct {
 }
 
 func (m bookmarkListModel) allHelpKeys() []key.Binding {
+	// Don't show alphabetic keys when filtering to avoid interference
+	if m.list.FilterState() == list.Filtering {
+		return []key.Binding{
+			key.NewBinding(
+				key.WithKeys("enter"),
+				key.WithHelp("enter", "copy cd command"),
+			),
+		}
+	}
+	
 	return []key.Binding{
 		key.NewBinding(
 			key.WithKeys("enter"),

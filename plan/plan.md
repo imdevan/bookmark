@@ -376,30 +376,6 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
       bookmark() {
         command bookmark "$@" && source ~/.bookmarks/bookmarks.sh
       }
-      ```
-
-
-
-
-
-
-- [ ] 5. Bookmark sync
---------------------------------------------------------------------------------
-- [ ] 5. Shell Integration
----
-  - [ ] 5.1 Generate shell-specific aliases
-    - notes: Output shell commands that can be sourced for navigation
-    - command: `bookmark shell-init <shell>`
-    - example: `bookmark shell-init bash`
-    - default to configured shell
-    - adds `source ~/.bookmarks/...` to appropriate rc file
-
-
-  - [ ] 5.2 Shell function generation
-    - notes: Create wrapper functions for seamless shell integration
-    - usage instructions: `eval "$(bookmark shell-init bash)"`
-    - add to shell rc: `echo 'eval "$(bookmark shell-init bash)"' >> ~/.bashrc`
-    - behavior: Function wraps `bookmark go` and evaluates output in current shell
 
 #  v0.2.0
 
