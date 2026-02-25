@@ -370,7 +370,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
   - [ ] 4.4 Source bookmarks 
       add to config example and init
-      source_bookmarks = true (default) | false
+      function_alias = true (default) | string alias_name | false (do not create function alias will not source bookmarks)
       if true add to top of bookmarks.sh, or relative shell configuration
       add comments indicating what is happening and why
       ```bash
