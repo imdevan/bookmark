@@ -23,6 +23,9 @@ build-aur:
 install:
 	install -m 0755 bin/bookmark /usr/local/bin/bookmark
 
+uninstall:
+	rm -f /usr/local/bin/bookmark
+
 test:
 	go test ./...
 
