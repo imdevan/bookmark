@@ -539,6 +539,31 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case tea.KeyMsg:
+		// When filtering, only allow filter-related keys and enter
+		// Block all alphabetic action keys to prevent interference
+		if m.list.FilterState() == list.Filtering {
+			switch msg.String() {
+			case "q", "esc", "ctrl+c":
+				return m, tea.Quit
+			case "enter":
+				if item, ok := m.list.SelectedItem().(bookmarkItem); ok {
+					cdCmd := fmt.Sprintf("cd %s", item.Bookmark.Path)
+					fmt.Println(cdCmd)
+					return m, tea.Quit
+				}
+			case "e", "n", "d", "D":
+				// Block these keys during filtering - let them pass to filter input
+				var cmd tea.Cmd
+				m.list, cmd = m.list.Update(msg)
+				return m, cmd
+			}
+			// Pass all other keys to list for filtering
+			var cmd tea.Cmd
+			m.list, cmd = m.list.Update(msg)
+			return m, cmd
+		}
+
+		// Normal mode - handle action keys
 		switch msg.String() {
 		case "q", "esc", "ctrl+c":
 			return m, tea.Quit
