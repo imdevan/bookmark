@@ -74,7 +74,7 @@ func renderConfigTemplate(cfg domain.Config) string {
 	builder.WriteString(fmt.Sprintf("# interactive_default = %t\n", cfg.InteractiveDefault))
 	
 	builder.WriteString("\n# Bookmark settings\n")
-	builder.WriteString(fmt.Sprintf("# bookmark_file = %q\n", cfg.BookmarkFile))
+	builder.WriteString(fmt.Sprintf("# bookmark_location = %q  # Directory for bookmark files\n", cfg.BookmarkLocation))
 	builder.WriteString(fmt.Sprintf("# navigation_tool = %q  # Options: cd, z, zoxide, none\n", cfg.NavigationTool))
 	builder.WriteString(fmt.Sprintf("# shell = %q  # Options: bash, zsh, fish, nu\n", cfg.Shell))
 	

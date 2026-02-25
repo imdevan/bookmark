@@ -5,9 +5,9 @@ editor = "nvim"
 interactive_default = true
 
 # Bookmark settings
-bookmark_file = "~/.bookmark/bookmarks.sh"
-navigation_tool = "z"                      # Options: cd, z, zoxide, none
-shell = "zsh"                              # Options: bash, zsh, fish, nu
+bookmark_location = "~/.bookmarks"  # Directory where bookmark files are stored (file extension based on shell)
+navigation_tool = "z"               # Options: cd, z, zoxide, none
+shell = "zsh"                       # Options: bash, zsh, fish, nu
 
 # Auto-alias generation
 auto_alias_separator = ""   # Character between first letters (empty = "mcp", "-" = "m-c-p")

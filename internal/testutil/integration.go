@@ -35,10 +35,9 @@ func SetupTestEnv(t *testing.T) *TestEnv {
 
 	// Create test config file
 	configPath := filepath.Join(configDir, "config.toml")
-	bookmarkFile := filepath.Join(bookmarkDir, "bookmarks.sh")
 
 	cfg := domain.Config{
-		BookmarkFile:       bookmarkFile,
+		BookmarkLocation:   bookmarkDir,
 		Shell:              "bash",
 		NavigationTool:     "cd",
 		Editor:             "vim",

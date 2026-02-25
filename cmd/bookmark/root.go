@@ -126,7 +126,7 @@ func resolvedVersion() string {
 }
 
 func runAddBookmark(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Config, cwd string) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor)
 
 	// Use source path if provided, otherwise use current directory
 	targetPath := cwd
@@ -215,11 +215,11 @@ func printSuccess(cmd *cobra.Command, alias, cwd string, isUpdate bool) {
 }
 
 func runEdit(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Config) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor)
 
 	// If no alias provided, just open the bookmarks file
 	if len(args) == 0 {
-		return openEditor(cfg.Editor, cfg.BookmarkFile, 0)
+		return openEditor(cfg.Editor, cfg.BookmarkFile(), 0)
 	}
 
 	alias := args[0]
@@ -253,7 +253,7 @@ func runEdit(cmd *cobra.Command, args []string, opts *rootOptions, cfg domain.Co
 	}
 
 	// Open bookmarks file in editor at the bookmark line
-	return openEditor(cfg.Editor, cfg.BookmarkFile, lineNum)
+	return openEditor(cfg.Editor, cfg.BookmarkFile(), lineNum)
 }
 
 func openEditor(editorName, filePath string, line int) error {
@@ -270,7 +270,7 @@ func openEditor(editorName, filePath string, line int) error {
 }
 
 func runInteractive(cmd *cobra.Command, opts *rootOptions, cfg domain.Config) error {
-	bmManager := bookmark.NewManager(cfg.BookmarkFile, cfg.Shell, cfg.NavigationTool, cfg.Editor)
+	bmManager := bookmark.NewManager(cfg.BookmarkFile(), cfg.Shell, cfg.NavigationTool, cfg.Editor)
 	bookmarks, err := bmManager.Load()
 	if err != nil {
 		return err
@@ -557,9 +557,9 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				editorAdapter := editor.New(editorName)
 				var openErr error
 				if lineNum > 0 {
-					openErr = editorAdapter.OpenAtLine(item.Config.BookmarkFile, lineNum)
+					openErr = editorAdapter.OpenAtLine(item.Config.BookmarkFile(), lineNum)
 				} else {
-					openErr = editorAdapter.Open(item.Config.BookmarkFile)
+					openErr = editorAdapter.Open(item.Config.BookmarkFile())
 				}
 				
 				if openErr != nil {

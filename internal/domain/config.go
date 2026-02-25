@@ -23,7 +23,7 @@ type Config struct {
 	ListSpacing          string `toml:"list_spacing"`
 	
 	// Bookmark settings
-	BookmarkFile         string `toml:"bookmark_file"`
+	BookmarkLocation     string `toml:"bookmark_location"`
 	NavigationTool       string `toml:"navigation_tool"`
 	Shell                string `toml:"shell"`
 	AutoAliasSeparator   string `toml:"auto_alias_separator"`
@@ -35,7 +35,7 @@ type Config struct {
 // DefaultConfig returns the default configuration values.
 func DefaultConfig() Config {
 	home, _ := os.UserHomeDir()
-	bookmarkFile := filepath.Join(home, ".bookmarks", "bookmarks.sh")
+	bookmarkLocation := filepath.Join(home, ".bookmarks")
 	
 	return Config{
 		Editor:               "nvim",
@@ -52,7 +52,7 @@ func DefaultConfig() Config {
 		Border:               "08",
 		InteractiveDefault:   true,
 		ListSpacing:          "space",
-		BookmarkFile:         bookmarkFile,
+		BookmarkLocation:     bookmarkLocation,
 		NavigationTool:       "cd",
 		Shell:                "zsh",
 		AutoAliasSeparator:   "",
@@ -60,6 +60,23 @@ func DefaultConfig() Config {
 		HomeIcon:             "~",
 		DefaultSortBy:        "newest",
 	}
+}
+
+// GetBookmarkFileName returns the appropriate bookmark filename for the shell.
+func GetBookmarkFileName(shell string) string {
+	switch shell {
+	case "fish":
+		return "bookmarks.fish"
+	case "nu", "nushell":
+		return "bookmarks.nu"
+	default: // bash, zsh, sh
+		return "bookmarks.sh"
+	}
+}
+
+// BookmarkFile returns the full path to the bookmark file based on shell.
+func (c Config) BookmarkFile() string {
+	return filepath.Join(c.BookmarkLocation, GetBookmarkFileName(c.Shell))
 }
 
 func xdgHome(envKey, fallbackSuffix string) string {

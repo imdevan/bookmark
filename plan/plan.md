@@ -356,7 +356,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - valid values: `"cd"`, `"z"`, `"zoxide"`, `"none"`
     - behavior: Changes output command format (e.g., `z /path` vs `cd /path`)
 
-  - [ ] 4.2 Bookmark storage location
+  - [x] 4.2 Bookmark storage location
     - notes: Configurable bookmark file location
     - config field: `bookmarks_location = "~/.bookmarks/"`
     - default: `~/.bookmarks/`

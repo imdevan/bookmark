@@ -99,7 +99,7 @@ type partialConfig struct {
 	Border               *string `toml:"border"`
 	InteractiveDefault   *bool   `toml:"interactive_default"`
 	ListSpacing          *string `toml:"list_spacing"`
-	BookmarkFile         *string `toml:"bookmark_file"`
+	BookmarkLocation     *string `toml:"bookmark_location"`
 	NavigationTool       *string `toml:"navigation_tool"`
 	Shell                *string `toml:"shell"`
 	AutoAliasSeparator   *string `toml:"auto_alias_separator"`
@@ -166,8 +166,8 @@ func applyPartial(config *domain.Config, partial *partialConfig) {
 	if partial.ListSpacing != nil {
 		config.ListSpacing = *partial.ListSpacing
 	}
-	if partial.BookmarkFile != nil {
-		config.BookmarkFile = expandPath(*partial.BookmarkFile)
+	if partial.BookmarkLocation != nil {
+		config.BookmarkLocation = expandPath(*partial.BookmarkLocation)
 	}
 	if partial.NavigationTool != nil {
 		config.NavigationTool = *partial.NavigationTool
