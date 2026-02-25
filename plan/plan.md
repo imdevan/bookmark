@@ -324,7 +324,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - behavior: Output shell command to stdout for evaluation
     - example output: `cd /home/user/projects/myapp`
 
-- [ ] 3. Advanced Features
+- [x] 3. Advanced Features
 ---
   - [x] 3.1 `-t` flag for tmux window naming
     - notes: Optional flag to define tmux window name when navigating to bookmark
@@ -368,7 +368,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - valid values: `"bash"`, `"zsh"`, `"fish"`, "nu"
     - usage: Affects shell-init command output format
 
-  - [ ] 4.4 Function alias
+  - [x] 4.4 Function alias
       add to config example and init
       function_alias = true (default) | string alias_name | false (do not create function alias will not source bookmarks)
       if true add to top of bookmarks.sh, or relative shell configuration
@@ -380,20 +380,6 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
 #  v0.2.0
 
-  - [ ] 1 Per-shell bookmark locations
-    - notes: Optional: support different bookmark files for different shells
-    - config example:
-      ```toml
-      [shell_bookmarks]
-      bash = "~/.bookmarks/.toml"
-      zsh = "~/.bookmarks/zsh.toml"
-      ```
-    - behavior: Falls back to `bookmarks_file` if shell-specific not set
-
-- [ ] 2 pin via comment? 
-    ```
-    alias marker = "cd ~/marker" # Go to marker - pin
-    ```
 
 - [x] 3 list enter: should execute defined alias (and all associated operations)
 
