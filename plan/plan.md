@@ -319,7 +319,6 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - [x] 2.2.5 q`: or `Esc`: Quit
 
 
-
   - [ ] 2.3 Navigate to selected bookmark
     - notes: Select bookmark from list to navigate to that directory
     - behavior: Output shell command to stdout for evaluation
@@ -363,34 +362,15 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     bookmark file will be based on shell: e.g.  `~/.bookmarks/bookmarks.sh`
 
   - [ ] 4.3 Shell type configuration
+    - config.editor
     - notes: Define which shell the user uses (bash, zsh, fish, etc.)
     - config field: `shell = "zsh"`
     - valid values: `"bash"`, `"zsh"`, `"fish"`, "nu"
     - usage: Affects shell-init command output format
 
-  - [ ] 4.4 Support multiple shell types 
-    - example: 
-    ```bash
-    shell = "zsh", "nu"
-
-    # creates:
-    ~/.bookmarks/bookmarks.sh
-    ~/.bookmarks/bookmarks.nu
-    ```
-
 
 - [ ] 5. Bookmark sync
 --------------------------------------------------------------------------------
-- [ ] 5.1 bookmark sync command 
-  - syncs bookmarks file based on:
-    - these should probably just be vars at the top of the bookmarks file
-    - config.shell
-      - prioritize first shell in list as source of truth
-      - confirm with user before updating out of sync alternate shells
-    - config.home_char
-    - config.navigation_tool
-    - config.editor
-
 - [ ] 5. Shell Integration
 ---
   - [ ] 5.1 Generate shell-specific aliases
@@ -427,3 +407,27 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 - [x] 3 list enter: should execute defined alias (and all associated operations)
 
 4 bookmark list should be more verbose and show associated metadata
+
+# v2.0.0
+
+- [ ] 1 Support multiple shell types 
+  - example: 
+  ```bash
+  shell = "zsh", "nu"
+
+# creates:
+  ~/.bookmarks/bookmarks.sh
+  ~/.bookmarks/bookmarks.nu
+  ```
+
+- [ ] 2 bookmark sync command 
+  - syncs bookmarks file based on:
+    - **these should probably just be vars at the top of the bookmarks file**
+    - config.shell
+    - prioritize first shell in list as source of truth
+    - confirm with user before updating out of sync alternate shells
+    - config.home_char
+    - config.navigation_tool
+    - config.editor
+
+
