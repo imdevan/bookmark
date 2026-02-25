@@ -350,7 +350,7 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
 
 - [ ] 4. Configuration System
 ---
-  - [ ] 4.1 Navigation tool selection
+  - [x] 4.1 Navigation tool selection
     - notes: Config option to choose navigation method: none, cd, z, zoxide, etc.
     - config field: `navigation_tool = "cd"`
     - valid values: `"cd"`, `"z"`, `"zoxide"`, `"none"`
@@ -396,33 +396,9 @@ echo "source $bookmark_file" >> ."$bookarm_shell"rc
     - notes: Output shell commands that can be sourced for navigation
     - command: `bookmark shell-init <shell>`
     - example: `bookmark shell-init bash`
-    - output for bash:
-      ```bash
-      bm() {
-        local output=$(bookmark go "$@")
-        if [ $? -eq 0 ]; then
-          eval "$output"
-        fi
-      }
-      ```
-    - output for zsh:
-      ```zsh
-      bm() {
-        local output=$(bookmark go "$@")
-        if [[ $? -eq 0 ]]; then
-          eval "$output"
-        fi
-      }
-      ```
-    - output for fish:
-      ```fish
-      function bm
-        set output (bookmark go $argv)
-        if test $status -eq 0
-          eval $output
-        end
-      end
-      ```
+    - default to configured shell
+    - adds `source ~/.bookmarks/...` to appropriate rc file
+
 
   - [ ] 5.2 Shell function generation
     - notes: Create wrapper functions for seamless shell integration
