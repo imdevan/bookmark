@@ -32,6 +32,7 @@ type Config struct {
 	AutoAliasLowercase   bool   `toml:"auto_alias_lowercase"`
 	HomeIcon             string `toml:"home_icon"`
 	DefaultSortBy        string `toml:"default_sort_by"`
+	FunctionAlias        string `toml:"function_alias"`
 }
 
 // DefaultConfig returns the default configuration values.
@@ -62,6 +63,7 @@ func DefaultConfig() Config {
 		AutoAliasLowercase:   true,
 		HomeIcon:             "~",
 		DefaultSortBy:        "newest",
+		FunctionAlias:        "true",
 	}
 }
 

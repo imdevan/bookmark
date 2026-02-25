@@ -82,6 +82,11 @@ func renderConfigTemplate(cfg domain.Config) string {
 	builder.WriteString(fmt.Sprintf("# auto_alias_separator = %q  # Character between first letters (empty = \"mcp\", \"-\" = \"m-c-p\")\n", cfg.AutoAliasSeparator))
 	builder.WriteString(fmt.Sprintf("# auto_alias_lowercase = %t\n", cfg.AutoAliasLowercase))
 	
+	builder.WriteString("\n# Function alias wrapper\n")
+	builder.WriteString("# When enabled, adds a shell function that auto-sources bookmarks after running bookmark commands\n")
+	builder.WriteString("# Options: \"true\" (use default name \"bookmark\"), \"custom_name\" (use custom function name), \"false\" (disabled)\n")
+	builder.WriteString(fmt.Sprintf("# function_alias = %q\n", cfg.FunctionAlias))
+	
 	builder.WriteString("\n# Display\n")
 	builder.WriteString(fmt.Sprintf("# home_icon = %q  # Icon to represent home directory in list view (can be nerd font icon like \"\")\n", cfg.HomeIcon))
 	builder.WriteString(fmt.Sprintf("# default_sort_by = %q  # Options: newest, oldest, a-z, z-a\n", cfg.DefaultSortBy))

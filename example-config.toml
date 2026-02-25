@@ -13,6 +13,11 @@ shell = "zsh"                       # Options: bash, zsh, fish, nu (auto-detecte
 auto_alias_separator = ""   # Character between first letters (empty = "mcp", "-" = "m-c-p")
 auto_alias_lowercase = true
 
+# Function alias wrapper
+# When enabled, adds a shell function that auto-sources bookmarks after running bookmark commands
+# Options: "true" (use default name "bookmark"), "custom_name" (use custom function name), "false" (disabled)
+function_alias = "true"
+
 # Display
 home_icon = "~"  # Icon to represent home directory in list view (can be nerd font icon like "")
 default_sort_by = "newest"  # Options: newest, oldest, a-z, z-a
