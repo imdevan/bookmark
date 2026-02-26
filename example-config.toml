@@ -2,7 +2,7 @@
 editor = "nvim"
 
 # CLI behavior
-interactive_default = true
+interactive_default = false
 
 # Bookmark settings
 bookmark_location = "~/.bookmarks"  # Directory where bookmark files are stored (file extension based on shell)

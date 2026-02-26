@@ -55,7 +55,7 @@ func DefaultConfig() Config {
 		Muted:                "08",
 		Accent:               "13",
 		Border:               "08",
-		InteractiveDefault:   true,
+		InteractiveDefault:   false,
 		ListSpacing:          "space",
 		BookmarkLocation:     bookmarkLocation,
 		NavigationTool:       "cd",
