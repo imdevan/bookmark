@@ -1,25 +1,25 @@
 # Installation
 
-## Install
-
-### Homebrew
+## Homebrew
 ```bash
 brew install imdevan/bookmark/bookmark
 ```
 
-### Arch (AUR)
+## Arch (AUR)
 ```bash
 yay -S bookmark
 ```
 
-### Manual
+## Manual
 
-#### Github release
+### Github release
+
 ```bash
 download 
 
 ```
-#### Build from source
+### Build from source
+
 ```bash
 git clone https://github.com/imdevan/bookmark.git
 cd bookmark
@@ -27,7 +27,6 @@ just build
 sudo just install
 ```
 
-#### clone the repo
 ## Verify Installation
 
 ```bash
