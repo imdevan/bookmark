@@ -3,9 +3,9 @@ const isProduction = stage === "production"
 
 export default {
   url: isProduction ? "https://devan.gg" : "http://localhost:4321",
-  basePath:  isProduction ? "/go-cli-template" : "/",
-  github: "https://github.com/imdevan/go-cli-template/",
-  githubDocs: "https://github.com/imdevan/go-cli-template/",
-  title: "go-cli-template",
-  description: "A generic CLI tool template built with Go, Cobra, and Bubble Tea. This template provides a foundation for building interactive command-line applications with a clean architecture and modern UI components.",
+  basePath:  isProduction ? "/bookmark" : "/",
+  github: "https://github.com/imdevan/bookmark/",
+  githubDocs: "https://github.com/imdevan/bookmark/",
+  title: "bookmark",
+  description: "A bookmark manager for your favorite shell",
 }

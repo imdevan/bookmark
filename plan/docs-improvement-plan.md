@@ -19,8 +19,11 @@ This plan outlines improvements to the documentation system for the bookmark CLI
       same as first item sidebar (package_name from README)
 
 - [ ] 2. Refactor just docs-generate script
-  - [ ] 2.1 Create sidebar layout structure
-    - notes: Sidebar should include: package_name (from README), install (from INSTALL.md), commands section, configuration, contributing
+  - [x] 2.1 Create sidebar layout structure
+    - notes: 
+      Sidebar should include: package_name (from README), install (from INSTALL.md), commands section, configuration, contributing
+      the updates should happen within the docs-generate script. 
+      and executed on just docs-dev and just docs-build
   - [ ] 2.2 Generate package_name section from README.md
     - notes: Main package overview and introduction
   - [ ] 2.3 Generate install section from INSTALL.md
