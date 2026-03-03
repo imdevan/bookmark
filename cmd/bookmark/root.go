@@ -49,6 +49,45 @@ func Execute() error {
 	return rootCmd.Execute()
 }
 
+/*
+newRootCmd creates the root command for the bookmark CLI.
+
+The root command serves multiple purposes:
+  - Without arguments: Opens interactive bookmark browser (if configured)
+  - With alias argument: Navigates to the bookmarked directory
+  - With --interactive/-i: Forces interactive mode
+  - With --edit/-e: Opens bookmarks file in editor
+  - With --version/-v: Prints version information
+
+When adding a bookmark, you can specify:
+  - --description/-d: Add a description to the bookmark
+  - --tmux/-t: Set tmux window name to match alias
+  - --tmux-name/-T: Set custom tmux window name
+  - --file/-f: Specify a file to open after navigation
+  - --execute/-x: Run a command after navigation
+  - --source/-s: Bookmark a different path than current directory
+  - --yes/-y: Skip confirmation prompts
+
+Examples:
+
+	# Add bookmark for current directory
+	bookmark myproject
+
+	# Add bookmark with description
+	bookmark myproject -d "My awesome project"
+
+	# Navigate to bookmark (in interactive mode)
+	bookmark
+
+	# Navigate to specific bookmark
+	bookmark myproject
+
+	# Edit bookmarks file
+	bookmark -e
+
+	# List all bookmarks
+	bookmark list
+*/
 func newRootCmd() *cobra.Command {
 	opts := &rootOptions{}
 	cmd := &cobra.Command{

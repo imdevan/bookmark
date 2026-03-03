@@ -12,6 +12,26 @@ import (
 	"bookmark/internal/utils"
 )
 
+/*
+newConfigCmd creates the config command for viewing or editing configuration.
+
+The config command opens the configuration file in your configured editor.
+If the config file doesn't exist, it will be created with default values.
+
+Subcommands:
+  - init: Generate a default config file
+
+Examples:
+
+	# Open config in editor
+	bookmark config
+
+	# Initialize new config file
+	bookmark config init
+
+	# Force overwrite existing config
+	bookmark config init --force
+*/
 func newConfigCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "config",
