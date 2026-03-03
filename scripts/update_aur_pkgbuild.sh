@@ -5,6 +5,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PACKAGE_TOML="${ROOT_DIR}/internal/package/package.toml"
 
+# Source shared utilities
+. "${ROOT_DIR}/scripts/lib.sh"
+
 VERSION="${1:-}"
 if [[ -z "${VERSION}" ]]; then
 	echo "Usage: $0 VERSION"
@@ -16,11 +19,11 @@ fi
 VERSION="${VERSION#v}"
 
 # Read package metadata
-NAME="$(grep '^name = ' "${PACKAGE_TOML}" | sed 's/^name = "\(.*\)"$/\1/')"
-REPO_URL="$(grep '^repository = ' "${PACKAGE_TOML}" | sed 's/^repository = "\(.*\)"$/\1/')"
-DESCRIPTION="$(grep '^description = ' "${PACKAGE_TOML}" | sed 's/^description = "\(.*\)"$/\1/')"
-HOMEPAGE="$(grep '^homepage = ' "${PACKAGE_TOML}" | sed 's/^homepage = "\(.*\)"$/\1/')"
-AUTHOR="$(grep '^author = ' "${PACKAGE_TOML}" | sed 's/^author = "\(.*\)"$/\1/')"
+NAME="$(parse_toml_key "${PACKAGE_TOML}" "name")"
+REPO_URL="$(parse_toml_key "${PACKAGE_TOML}" "repository")"
+DESCRIPTION="$(parse_toml_key "${PACKAGE_TOML}" "description")"
+HOMEPAGE="$(parse_toml_key "${PACKAGE_TOML}" "homepage")"
+AUTHOR="$(parse_toml_key "${PACKAGE_TOML}" "author")"
 
 AUR_DIR="${ROOT_DIR}/../aur-${NAME}"
 PKGBUILD_PATH="${AUR_DIR}/PKGBUILD"
@@ -34,15 +37,12 @@ fi
 # Download tarball and calculate SHA256
 TARBALL_URL="${REPO_URL}archive/refs/tags/v${VERSION}.tar.gz"
 echo "📥 Downloading release tarball..."
-TEMP_FILE=$(mktemp)
-trap "rm -f ${TEMP_FILE}" EXIT
 
-if ! curl -sL "${TARBALL_URL}" -o "${TEMP_FILE}"; then
+if ! SHA256=$(download_and_hash "${TARBALL_URL}"); then
 	echo "❌ Failed to download: ${TARBALL_URL}"
 	exit 1
 fi
 
-SHA256=$(sha256sum "${TEMP_FILE}" | awk '{print $1}')
 echo "✅ SHA256: ${SHA256}"
 
 # Update PKGBUILD

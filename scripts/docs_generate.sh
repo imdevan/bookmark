@@ -5,24 +5,22 @@ set -euo pipefail
 # Usage: ./docs_generate.sh [--dev]
 #   --dev: Use '/' as base for local development
 
-PACKAGE_FILE="internal/package/package.toml"
-DOCS_API_DIR="docs/src/content/docs/api"
-DOCS_CONFIG="docs/config.mjs"
-DOCS_SIDEBAR="docs/sidebar.mjs"
-CMD_DIR="cmd/bookmark"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+PACKAGE_FILE="${ROOT_DIR}/internal/package/package.toml"
+DOCS_API_DIR="${ROOT_DIR}/docs/src/content/docs/api"
+DOCS_CONFIG="${ROOT_DIR}/docs/config.mjs"
+DOCS_SIDEBAR="${ROOT_DIR}/docs/sidebar.mjs"
+CMD_DIR="${ROOT_DIR}/cmd/bookmark"
 
-# Parse package.toml
-parse_toml() {
-  local key=$1
-  grep "^$key = " "$PACKAGE_FILE" | sed 's/^[^=]*= *"\(.*\)"$/\1/'
-}
+# Source shared utilities
+. "${ROOT_DIR}/scripts/lib.sh"
 
 echo "📦 Reading package metadata..."
-PROJECT_NAME=$(parse_toml "name")
-DESCRIPTION=$(parse_toml "description")
-DOCS_SITE=$(parse_toml "docs_site")
-DOCS_BASE=$(parse_toml "docs_base")
-REPOSITORY=$(parse_toml "repository")
+PROJECT_NAME=$(parse_toml_key "$PACKAGE_FILE" "name")
+DESCRIPTION=$(parse_toml_key "$PACKAGE_FILE" "description")
+DOCS_SITE=$(parse_toml_key "$PACKAGE_FILE" "docs_site")
+DOCS_BASE=$(parse_toml_key "$PACKAGE_FILE" "docs_base")
+REPOSITORY=$(parse_toml_key "$PACKAGE_FILE" "repository")
 
 # Use defaults if repository is empty
 if [ -z "$REPOSITORY" ]; then

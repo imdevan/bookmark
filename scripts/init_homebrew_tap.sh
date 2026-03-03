@@ -5,11 +5,14 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PACKAGE_TOML="${ROOT_DIR}/internal/package/package.toml"
 
+# Source shared utilities
+. "${ROOT_DIR}/scripts/lib.sh"
+
 # Read package metadata
-NAME="$(grep '^name = ' "${PACKAGE_TOML}" | sed 's/^name = "\(.*\)"$/\1/')"
-DESCRIPTION="$(grep '^description = ' "${PACKAGE_TOML}" | sed 's/^description = "\(.*\)"$/\1/')"
-HOMEPAGE="$(grep '^homepage = ' "${PACKAGE_TOML}" | sed 's/^homepage = "\(.*\)"$/\1/')"
-REPO_URL="$(grep '^repository = ' "${PACKAGE_TOML}" | sed 's/^repository = "\(.*\)"$/\1/')"
+NAME="$(parse_toml_key "${PACKAGE_TOML}" "name")"
+DESCRIPTION="$(parse_toml_key "${PACKAGE_TOML}" "description")"
+HOMEPAGE="$(parse_toml_key "${PACKAGE_TOML}" "homepage")"
+REPO_URL="$(parse_toml_key "${PACKAGE_TOML}" "repository")"
 
 # Extract GitHub username from repository URL
 GITHUB_USER="$(echo "${REPO_URL}" | sed -E 's|https://github.com/([^/]+)/.*|\1|')"
@@ -23,14 +26,14 @@ echo "   Location: ${TAP_DIR}"
 
 # Create tap directory if it doesn't exist
 if [[ -d "${TAP_DIR}" ]]; then
-	echo "⚠️  Tap directory already exists: ${TAP_DIR}"
-	read -p "Do you want to reinitialize it? (y/N) " -n 1 -r
-	echo
-	if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-		echo "Aborted."
-		exit 1
-	fi
-	rm -rf "${TAP_DIR}"
+  echo "⚠️  Tap directory already exists: ${TAP_DIR}"
+  read -p "Do you want to reinitialize it? (y/N) " -n 1 -r
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "Aborted."
+    exit 1
+  fi
+  rm -rf "${TAP_DIR}"
 fi
 
 mkdir -p "${TAP_DIR}/Formula"
