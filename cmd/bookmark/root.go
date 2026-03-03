@@ -343,8 +343,8 @@ func runBookmarkListing(bookmarks []domain.Bookmark, cfg domain.Config, bmManage
 	})
 
 	listModel := ui.NewListModel(items, delegate, 80, 20, theme)
-	listModel.Title = icon.Bookmarks.String() + " Bookmarks"
-	listModel.SetShowStatusBar(true)
+	listModel.Title = fmt.Sprintf("%s Bookmarks (%d)", icon.Bookmarks.String(), len(items))
+	listModel.SetShowStatusBar(false)
 	listModel.SetFilteringEnabled(true)
 
 	model := bookmarkListModel{
@@ -438,6 +438,22 @@ type bookmarkListModel struct {
 	pendingAction string
 	pendingItem   bookmarkItem
 }
+
+func (m *bookmarkListModel) updateTitle() {
+	visibleCount := len(m.list.VisibleItems())
+	totalCount := len(m.list.Items())
+
+	if m.list.FilterState() == list.Filtering || m.list.FilterState() == list.FilterApplied {
+		if visibleCount != totalCount {
+			m.list.Title = fmt.Sprintf("%s Bookmarks (%d/%d)", icon.Bookmarks.String(), visibleCount, totalCount)
+		} else {
+			m.list.Title = fmt.Sprintf("%s Bookmarks (%d)", icon.Bookmarks.String(), totalCount)
+		}
+	} else {
+		m.list.Title = fmt.Sprintf("%s Bookmarks (%d)", icon.Bookmarks.String(), totalCount)
+	}
+}
+
 
 func (m bookmarkListModel) allHelpKeys() []key.Binding {
 	// Don't show alphabetic keys when filtering to avoid interference
@@ -641,6 +657,7 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						}
 					}
 					m.list.SetItems(filtered)
+					m.updateTitle()
 				}
 			}
 		}
@@ -648,6 +665,7 @@ func (m bookmarkListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	var cmd tea.Cmd
 	m.list, cmd = m.list.Update(msg)
+	m.updateTitle()
 	return m, cmd
 }
 
@@ -684,6 +702,7 @@ func (m bookmarkListModel) executeAction() (tea.Model, tea.Cmd) {
 				}
 			}
 			m.list.SetItems(filtered)
+			m.updateTitle()
 		}
 	}
 	m.pendingAction = ""
