@@ -1,4 +1,4 @@
-# go-cli-template
+# Bookmark
 
 <img width="480" height="270" alt="screenshot-2026-02-23_16-30-13" src="https://github.com/user-attachments/assets/65386b56-f06f-47be-9063-5c947b30dc51" />
 
@@ -6,29 +6,51 @@ A bookmark manager for your favorite shell
 
 ## Features
 
-- Interactive list with filtering
-- [Built on go Cobra](https://github.com/spf13/cobra)
-- Configuration management with TOML
-- Styles, build scripts, and tests to get you started.
-- [Inline Bubble Tea TUI components](https://github.com/charmbracelet/bubbletea)
-- Homebrew and aur package management with TOML too!
-- Automatic documentation with [gomarkdoc](https://github.com/princjef/gomarkdoc) and [astro starlight](https://starlight.astro.build/)
-- XDG Base Directory support
-- Shell completion (bash, zsh, fish, powershell)
-
-## Quick start
+- A bookmark manager that works WITH your shell
+- Integrates with your favorite shell!
+- Integrates with TMUX and your favorite editor!
+## Install
 
 ```bash
 just build-run
 ```
 
-## Commands
+
+## Bookmark your favorite folder
 
 ```bash
-go-cli-template                 # Root command (placerholder shows folder content)
-go-cli-template config          # View or edit configuration
-go-cli-template config init     # Generate default config file
-go-cli-template completion      # Generate shell completion scripts
+~/Projects/favorite-project
+bookmark
+"bookmark fb created!"
+
+# Pass a name
+bookmark foo
+"bookmark foo created!"
+
+# Rename tmux window on navigation
+bookmark -t
+
+#  Rename tmux custom window
+bookmark -T foo
+```
+
+Bookmarks are created by default at `~/.bookmarks/bookmarks.sh`
+
+## Using different shell? 
+
+Bookmark is set up for zsh first but works with any shell. Run `bookmark config init` to create a custom config file.
+
+See configuration options for more info.
+
+## Commands
+
+
+```bash
+bookmark                 # Bookmark a file
+bm                       # Interactive bookmark list
+bookmark config          # View or edit configuration
+bookmark config init     # Generate default config file
+bookmark completion      # Generate shell completion scripts
 ```
 
 ## Development
