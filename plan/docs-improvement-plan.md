@@ -12,13 +12,13 @@ This plan outlines improvements to the documentation system for the bookmark CLI
 
 # v1.0.0
 
-- [ ] 1. Remove Current Lander
-  - [ ] 1.1 Remove existing landing page implementation
+- [x] 1. Remove Current Lander
+  - [x] 1.1 Remove existing landing page implementation
     notes: 
       root should link directly to docs
       same as first item sidebar (package_name from README)
 
-- [ ] 2. Implement Auto-Generated Documentation System
+- [ ] 2. Refactor just docs-generate script
   - [ ] 2.1 Create sidebar layout structure
     - notes: Sidebar should include: package_name (from README), install (from INSTALL.md), commands section, configuration, contributing
   - [ ] 2.2 Generate package_name section from README.md
@@ -49,7 +49,7 @@ This plan outlines improvements to the documentation system for the bookmark CLI
   - [ ] 3.4 Add search functionality to right side
     - notes: Enable searching across documentation
 
-- [ ] 4. Update just docs_* Commands
+- [ ] 4. Update just docs-generate Command
   - [ ] 4.1 Ensure docs generation commands are helpful
     - notes: Commands should be intuitive and well-documented
   - [ ] 4.2 Ensure generated docs are aesthetically pleasing
