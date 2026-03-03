@@ -1,17 +1,34 @@
 # Installation
 
-## Homebrew
+## Install
+
+### Homebrew
 ```bash
-brew install <your_gh_username>/<cask>/<package_name>
+brew install imdevan/bookmark/bookmark
 ```
 
-## Arch (AUR)
+### Arch (AUR)
 ```bash
-yay -S <package_name>
+yay -S bookmark
 ```
 
-## Manual
+### Manual
 ```bash
 just build
 sudo just install
 ```
+
+## Verify Installation
+
+```bash
+bookmark
+```
+
+## Customize
+
+```bash
+bookmark config init # init config
+
+bookmark config
+```
+See [config docs for more details](/configuration)
