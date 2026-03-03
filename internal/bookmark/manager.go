@@ -246,7 +246,7 @@ func (m *Manager) BuildNavigationCommand(bm domain.Bookmark) string {
 	if m.navTool != "" && m.navTool != "none" {
 		navCmd = m.navTool
 	}
-	parts = append(parts, fmt.Sprintf("%s %s", navCmd, bm.Path))
+	parts = append(parts, fmt.Sprintf("%s '%s'", navCmd, bm.Path))
 
 	// 2. Tmux window rename (after navigation)
 	if bm.TmuxWindowName != "" {
@@ -265,7 +265,7 @@ func (m *Manager) BuildNavigationCommand(bm domain.Bookmark) string {
 
 	// 5. Open file in editor (always last)
 	if bm.File != "" && m.editor != "" {
-		parts = append(parts, fmt.Sprintf("%s %s", m.editor, bm.File))
+		parts = append(parts, fmt.Sprintf("%s '%s'", m.editor, bm.File))
 	}
 
 	return strings.Join(parts, " && ")

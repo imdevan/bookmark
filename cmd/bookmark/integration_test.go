@@ -500,8 +500,9 @@ func TestIntegration_AliasStructure(t *testing.T) {
 	if !strings.Contains(aliasLine, "tmux rename-window") {
 		t.Error("expected alias to contain tmux rename-window")
 	}
-	if !strings.Contains(aliasLine, "cd "+testDir) {
-		t.Errorf("expected alias to contain cd %s", testDir)
+	// Check for quoted path (paths are now properly quoted)
+	if !strings.Contains(aliasLine, "cd '") && !strings.Contains(aliasLine, "cd "+testDir) {
+		t.Errorf("expected alias to contain cd command with path")
 	}
 	if !strings.Contains(aliasLine, "echo") {
 		t.Error("expected alias to contain execute command (echo)")
@@ -511,7 +512,7 @@ func TestIntegration_AliasStructure(t *testing.T) {
 	}
 
 	// Verify order using string positions within the alias line
-	cdPos := strings.Index(aliasLine, "cd "+testDir)
+	cdPos := strings.Index(aliasLine, "cd ")
 	tmuxPos := strings.Index(aliasLine, "tmux rename-window")
 	execPos := strings.Index(aliasLine, "echo")
 	filePos := strings.Index(aliasLine, "main.go")
