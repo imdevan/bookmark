@@ -24,9 +24,9 @@ This plan outlines improvements to the documentation system for the bookmark CLI
       Sidebar should include: package_name (from README), install (from INSTALL.md), commands section, configuration, contributing
       the updates should happen within the docs-generate script. 
       and executed on just docs-dev and just docs-build
-  - [ ] 2.2 Generate package_name section from README.md
+  - [x] 2.2 Generate package_name section from README.md
     - notes: Main package overview and introduction
-  - [ ] 2.3 Generate install section from INSTALL.md
+  - [x] 2.3 Generate install section from INSTALL.md
     - notes: Installation instructions
       for this page specifically h3 elements should be converted to starlight tabs
       `import { Tabs, TabItem } from "@astrojs/starlight/components";`
