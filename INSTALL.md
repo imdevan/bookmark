@@ -13,11 +13,21 @@ yay -S bookmark
 ```
 
 ### Manual
+
+#### Github release
 ```bash
+download 
+
+```
+#### Build from source
+```bash
+git clone https://github.com/imdevan/bookmark.git
+cd bookmark
 just build
 sudo just install
 ```
 
+#### clone the repo
 ## Verify Installation
 
 ```bash
