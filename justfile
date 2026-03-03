@@ -2,7 +2,8 @@ set shell := ["zsh", "-cu"]
 
 build:
 	go build -o bin/bookmark ./cmd/bookmark
-	@ls -lh bin/bookmark | awk '{print "Build size: " $$5}'
+	@size=$(stat -c %s bin/bookmark 2>/dev/null || stat -f %z bin/bookmark 2>/dev/null); \
+	echo "Build size: $(awk "BEGIN {printf \"%.2f MB\", $size/1048576}")"
 
 build-run:
 	go build -o bin/bookmark ./cmd/bookmark && ./bin/bookmark
@@ -21,6 +22,9 @@ build-aur:
 
 install:
 	install -m 0755 bin/bookmark /usr/local/bin/bookmark
+
+uninstall:
+	rm -f /usr/local/bin/bookmark
 
 test:
 	go test ./...

@@ -1,4 +1,8 @@
-# Installation
+---
+title: Install
+description: Installation instructions for bookmark
+---
+
 
 ## Homebrew
 ```bash

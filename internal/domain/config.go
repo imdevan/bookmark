@@ -3,6 +3,8 @@ package domain
 import (
 	"os"
 	"path/filepath"
+
+	shelladapter "bookmark/internal/adapters/shell"
 )
 
 // Config describes the resolved configuration.
@@ -21,10 +23,25 @@ type Config struct {
 	Border               string `toml:"border"`
 	InteractiveDefault   bool   `toml:"interactive_default"`
 	ListSpacing          string `toml:"list_spacing"`
+	
+	// Bookmark settings
+	BookmarkLocation     string `toml:"bookmark_location"`
+	NavigationTool       string `toml:"navigation_tool"`
+	Shell                string `toml:"shell"`
+	AutoAliasSeparator   string `toml:"auto_alias_separator"`
+	AutoAliasLowercase   bool   `toml:"auto_alias_lowercase"`
+	HomeIcon             string `toml:"home_icon"`
+	DefaultSortBy        string `toml:"default_sort_by"`
+	FunctionAlias        string `toml:"function_alias"`
+	InteractiveAlias     string `toml:"interactive_alias"`
 }
 
 // DefaultConfig returns the default configuration values.
 func DefaultConfig() Config {
+	home, _ := os.UserHomeDir()
+	bookmarkLocation := filepath.Join(home, ".bookmarks")
+	detectedShell := shelladapter.DetectShell()
+	
 	return Config{
 		Editor:               "nvim",
 		Headings:             "15",
@@ -38,9 +55,35 @@ func DefaultConfig() Config {
 		Muted:                "08",
 		Accent:               "13",
 		Border:               "08",
-		InteractiveDefault:   true,
+		InteractiveDefault:   false,
 		ListSpacing:          "space",
+		BookmarkLocation:     bookmarkLocation,
+		NavigationTool:       "cd",
+		Shell:                detectedShell,
+		AutoAliasSeparator:   "",
+		AutoAliasLowercase:   true,
+		HomeIcon:             "~",
+		DefaultSortBy:        "newest",
+		FunctionAlias:        "true",
+		InteractiveAlias:     "bm",
 	}
+}
+
+// GetBookmarkFileName returns the appropriate bookmark filename for the shell.
+func GetBookmarkFileName(shell string) string {
+	switch shell {
+	case "fish":
+		return "bookmarks.fish"
+	case "nu", "nushell":
+		return "bookmarks.nu"
+	default: // bash, zsh, sh
+		return "bookmarks.sh"
+	}
+}
+
+// BookmarkFile returns the full path to the bookmark file based on shell.
+func (c Config) BookmarkFile() string {
+	return filepath.Join(c.BookmarkLocation, GetBookmarkFileName(c.Shell))
 }
 
 func xdgHome(envKey, fallbackSuffix string) string {

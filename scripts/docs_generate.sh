@@ -8,6 +8,8 @@ set -euo pipefail
 PACKAGE_FILE="internal/package/package.toml"
 DOCS_API_DIR="docs/src/content/docs/api"
 DOCS_CONFIG="docs/config.mjs"
+DOCS_SIDEBAR="docs/sidebar.mjs"
+CMD_DIR="cmd/bookmark"
 
 # Parse package.toml
 parse_toml() {
@@ -46,6 +48,346 @@ export default {
 EOF
   echo "  ✓ Updated config.mjs with package metadata"
 fi
+
+echo "🔧 Generating sidebar configuration..."
+
+# Detect commands from cmd directory
+COMMANDS=""
+if [ -d "$CMD_DIR" ]; then
+  for cmd_file in "$CMD_DIR"/*.go; do
+    # Skip test files, main.go, and root.go
+    if [[ "$cmd_file" == *"_test.go" ]] || [[ "$cmd_file" == *"/main.go" ]] || [[ "$cmd_file" == *"/root.go" ]]; then
+      continue
+    fi
+
+    # Extract command name from filename (e.g., config.go -> config, delete_cmd.go -> delete)
+    cmd_name=$(basename "$cmd_file" .go | sed 's/_cmd$//')
+
+    # Convert underscores to spaces for display (e.g., config_init -> config init)
+    cmd_display=$(echo "$cmd_name" | sed 's/_/ /g')
+
+    # Convert underscores to hyphens for URL (e.g., config_init -> config-init)
+    cmd_url=$(echo "$cmd_name" | sed 's/_/-/g')
+
+    COMMANDS="${COMMANDS}            { label: '${cmd_display}', link: '/commands/${cmd_url}' },
+"
+  done
+fi
+
+# Generate sidebar.mjs
+cat >"$DOCS_SIDEBAR" <<EOF
+export default [
+  {
+    label: '${PROJECT_NAME}',
+    link: '/',
+  },
+  {
+    label: 'Install',
+    link: '/install',
+  },
+  {
+    label: 'Commands',
+    items: [
+      { label: '${PROJECT_NAME}', link: '/commands/${PROJECT_NAME}' },
+${COMMANDS}    ],
+  },
+  {
+    label: 'Configuration',
+    link: '/configuration',
+  },
+]
+EOF
+
+echo "  ✓ Generated sidebar.mjs with detected commands"
+
+echo "📝 Generating content pages..."
+
+DOCS_CONTENT_DIR="docs/src/content/docs"
+
+# Generate index page from README.md
+if [ -f "README.md" ]; then
+  {
+    echo "---"
+    echo "title: ${PROJECT_NAME}"
+    echo "description: ${DESCRIPTION}"
+    echo "---"
+    echo ""
+    # Skip the first heading from README and output the rest
+    sed '1{/^# /d;}' README.md
+  } >"${DOCS_CONTENT_DIR}/index.md"
+  echo "  ✓ Generated index.md from README.md"
+fi
+
+# Generate install page from INSTALL.md
+if [ -f "INSTALL.md" ]; then
+  {
+    echo "---"
+    echo "title: Install"
+    echo "description: Installation instructions for ${PROJECT_NAME}"
+    echo "---"
+    echo ""
+    # Skip the first heading from INSTALL.md and output the rest
+    sed '1{/^# /d;}' INSTALL.md
+  } >"${DOCS_CONTENT_DIR}/install.md"
+  echo "  ✓ Generated install.md from INSTALL.md"
+fi
+
+# Generate configuration page from CONFIG.md
+if [ -f "CONFIG.md" ]; then
+  {
+    echo "---"
+    echo "title: Configuration"
+    echo "description: Configuration options for ${PROJECT_NAME}"
+    echo "---"
+    echo ""
+    # Skip the first heading from CONFIG.md and output the rest
+    sed '1{/^# /d;}' CONFIG.md
+  } >"${DOCS_CONTENT_DIR}/configuration.md"
+  echo "  ✓ Generated configuration.md from CONFIG.md"
+fi
+
+# Create commands directory
+mkdir -p "${DOCS_CONTENT_DIR}/commands"
+
+# Generate root command page from root.go
+if [ -f "cmd/bookmark/root.go" ]; then
+  # For root command, use the description from package.toml
+  ROOT_SHORT="${DESCRIPTION}"
+
+  # Extract godoc comment for root command (supports both // and /* */ style)
+  ROOT_GODOC=$(awk '
+    /^\/\*$/ {
+      in_block = 1
+      comment = ""
+      next
+    }
+    in_block && /\*\// {
+      in_block = 0
+      print comment
+      exit
+    }
+    in_block {
+      if (comment == "") {
+        comment = $0
+      } else {
+        comment = comment "\n" $0
+      }
+    }
+  ' "cmd/bookmark/root.go")
+
+  cat >"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md" <<EOF
+---
+title: ${PROJECT_NAME}
+description: ${ROOT_SHORT}
+---
+
+${ROOT_SHORT}
+
+## Usage
+
+\`\`\`bash
+${PROJECT_NAME} [alias]
+${PROJECT_NAME} [command]
+\`\`\`
+EOF
+
+  # Add godoc description if available
+  if [ -n "$ROOT_GODOC" ]; then
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "## Description" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "$ROOT_GODOC" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  fi
+
+  # Extract flags from root.go
+  root_flags=$(awk '
+    /Flags\(\)\..*VarP?\(/ {
+      line = $0
+      if (match(line, /Flags\(\)\.(Bool|String|Int)VarP?\([^,]+, *"([^"]+)", *"([^"]*)", *[^,]+, *"([^"]+)"\)/, arr)) {
+        flag_type = arr[1]
+        flag_long = arr[2]
+        flag_short = arr[3]
+        flag_desc = arr[4]
+        
+        if (flag_short != "") {
+          flag_col = "-" flag_short ", --" flag_long
+        } else {
+          flag_col = "--" flag_long
+        }
+        
+        type_col = tolower(flag_type)
+        
+        print "| `" flag_col "` | " type_col " | " flag_desc " |"
+      }
+    }
+  ' "cmd/bookmark/root.go")
+
+  # Add flags table if flags were found
+  if [ -n "$root_flags" ]; then
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "## Flags" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "| Flag | Type | Description |" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "|------|------|-------------|" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "$root_flags" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  fi
+
+  echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  echo "## Available Commands" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+
+  # List all subcommands
+  for cmd_file in "$CMD_DIR"/*.go; do
+    if [[ "$cmd_file" == *"_test.go" ]] || [[ "$cmd_file" == *"/main.go" ]] || [[ "$cmd_file" == *"/root.go" ]]; then
+      continue
+    fi
+
+    cmd_name=$(basename "$cmd_file" .go | sed 's/_cmd$//')
+    cmd_display=$(echo "$cmd_name" | sed 's/_/ /g')
+    cmd_url=$(echo "$cmd_name" | sed 's/_/-/g')
+
+    # Extract Short description - handle both quoted strings and variables
+    cmd_short=$(awk '/Short:/ {
+      if (match($0, /Short: *"([^"]*)"/, arr)) {
+        print arr[1]
+      }
+    }' "$cmd_file" | head -1)
+
+    echo "- [\`${cmd_display}\`](/commands/${cmd_url}) - ${cmd_short}" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  done
+
+  cat >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md" <<EOF
+
+## Source
+
+See [root.go](${REPOSITORY}/blob/main/cmd/bookmark/root.go) for implementation details.
+EOF
+
+  echo "  ✓ Generated commands/${PROJECT_NAME}.md"
+fi
+
+# Generate documentation for each command
+for cmd_file in "$CMD_DIR"/*.go; do
+  # Skip test files, main.go, and root.go
+  if [[ "$cmd_file" == *"_test.go" ]] || [[ "$cmd_file" == *"/main.go" ]] || [[ "$cmd_file" == *"/root.go" ]]; then
+    continue
+  fi
+
+  # Extract command name from filename
+  cmd_name=$(basename "$cmd_file" .go | sed 's/_cmd$//')
+  cmd_display=$(echo "$cmd_name" | sed 's/_/ /g')
+  cmd_url=$(echo "$cmd_name" | sed 's/_/-/g')
+
+  # Extract command information from the Go file using awk for better parsing
+  cmd_use=$(awk '/Use:/ {
+    if (match($0, /Use: *"([^"]*)"/, arr)) {
+      print arr[1]
+    }
+  }' "$cmd_file" | head -1)
+
+  cmd_short=$(awk '/Short:/ {
+    if (match($0, /Short: *"([^"]*)"/, arr)) {
+      print arr[1]
+    }
+  }' "$cmd_file" | head -1)
+
+  # Extract godoc comment (supports both // and /* */ style)
+  cmd_godoc=$(awk '
+    /^\/\*$/ {
+      in_block = 1
+      comment = ""
+      next
+    }
+    in_block && /\*\// {
+      in_block = 0
+      print comment
+      exit
+    }
+    in_block {
+      if (comment == "") {
+        comment = $0
+      } else {
+        comment = comment "\n" $0
+      }
+    }
+  ' "$cmd_file")
+
+  # Use display name if Use is empty
+  if [ -z "$cmd_use" ]; then
+    cmd_use="$cmd_display"
+  fi
+
+  # Generate command documentation
+  cat >"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md" <<EOF
+---
+title: ${cmd_display}
+description: ${cmd_short}
+---
+
+${cmd_short}
+
+## Usage
+
+\`\`\`bash
+${PROJECT_NAME} ${cmd_use}
+\`\`\`
+EOF
+
+  # Add godoc description if available
+  if [ -n "$cmd_godoc" ]; then
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "## Description" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "$cmd_godoc" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+  fi
+
+  # Extract flags from the command file
+  flags=$(awk '
+    /Flags\(\)\..*VarP?\(/ {
+      # Extract flag information
+      line = $0
+      # Try to match the pattern for flag definitions
+      if (match(line, /Flags\(\)\.(Bool|String|Int)VarP?\([^,]+, *"([^"]+)", *"([^"]*)", *[^,]+, *"([^"]+)"\)/, arr)) {
+        flag_type = arr[1]
+        flag_long = arr[2]
+        flag_short = arr[3]
+        flag_desc = arr[4]
+        
+        # Build flag column
+        if (flag_short != "") {
+          flag_col = "-" flag_short ", --" flag_long
+        } else {
+          flag_col = "--" flag_long
+        }
+        
+        # Determine type
+        type_col = tolower(flag_type)
+        
+        print "| `" flag_col "` | " type_col " | " flag_desc " |"
+      }
+    }
+  ' "$cmd_file")
+
+  # Add flags table if flags were found
+  if [ -n "$flags" ]; then
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "## Flags" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "| Flag | Type | Description |" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "|------|------|-------------|" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "$flags" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+  fi
+
+  # Add source link
+  cat >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md" <<EOF
+
+## Source
+
+See [$(basename "$cmd_file")](${REPOSITORY}/blob/main/cmd/bookmark/$(basename "$cmd_file")) for implementation details.
+EOF
+
+  echo "  ✓ Generated commands/${cmd_url}.md"
+done
 
 echo "🔧 Checking for gomarkdoc..."
 if ! command -v gomarkdoc &>/dev/null; then

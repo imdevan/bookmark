@@ -10,14 +10,14 @@ func TestRootCommandHasVersion(t *testing.T) {
 	if versionFlag == nil {
 		t.Fatal("expected --version flag to be registered")
 	}
-	if versionFlag.Shorthand != "V" {
-		t.Fatalf("expected shorthand -V, got %q", versionFlag.Shorthand)
+	if versionFlag.Shorthand != "v" {
+		t.Fatalf("expected shorthand -v, got %q", versionFlag.Shorthand)
 	}
 }
 
 func TestRootCommandHasConfig(t *testing.T) {
 	cmd := newRootCmd()
-	configFlag := cmd.Flags().Lookup("config")
+	configFlag := cmd.PersistentFlags().Lookup("config")
 	if configFlag == nil {
 		t.Fatal("expected --config flag to be registered")
 	}

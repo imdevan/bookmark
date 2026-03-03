@@ -1,4 +1,8 @@
-# Bookmark
+---
+title: bookmark
+description: A bookmark manager for your favorite shell
+---
+
 
 <img width="480" height="270" alt="screenshot-2026-02-23_16-30-13" src="https://github.com/user-attachments/assets/65386b56-f06f-47be-9063-5c947b30dc51" />
 

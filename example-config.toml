@@ -2,14 +2,36 @@
 editor = "nvim"
 
 # CLI behavior
-interactive_default = true
+interactive_default = false
+
+# Bookmark settings
+bookmark_location = "~/.bookmarks"  # Directory where bookmark files are stored (file extension based on shell)
+navigation_tool = "z"               # Options: cd, z, zoxide, none
+shell = "zsh"                       # Options: bash, zsh, fish, nu (auto-detected if not specified)
+
+# Auto-alias generation
+auto_alias_separator = ""   # Character between first letters (empty = "mcp", "-" = "m-c-p")
+auto_alias_lowercase = true
+
+# Function alias wrapper
+# When enabled, adds a shell function that auto-sources bookmarks after running bookmark commands
+# Options: "true" (use default name "bookmark"), "custom_name" (use custom function name), "false" (disabled)
+function_alias = "true"
+
+# Interactive alias wrapper
+# When enabled, adds a shell function for interactive bookmark navigation (bookmark -i)
+# The function displays the TUI and executes the selected bookmark command
+# Options: "bm" (default), "custom_name" (use custom function name), "false" (disabled)
+interactive_alias = "bm"
+
+# Display
+home_icon = "~"  # Icon to represent home directory in list view (can be nerd font icon like "")
+default_sort_by = "newest"  # Options: newest, oldest, a-z, z-a
 
 # UI
-# list_spacing options: compact (title only), tight (title + description, no margin), space (default, with spacing)
-list_spacing = "space"
+list_spacing = "space" # Options: compact, tight, space
 
 # Colors
-# Colors support named, numeric, or hex values (ex: 7, 13, "#ff8800").
 headings = "15"
 primary = "02"
 secondary = "06"

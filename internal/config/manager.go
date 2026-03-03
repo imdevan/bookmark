@@ -99,6 +99,13 @@ type partialConfig struct {
 	Border               *string `toml:"border"`
 	InteractiveDefault   *bool   `toml:"interactive_default"`
 	ListSpacing          *string `toml:"list_spacing"`
+	BookmarkLocation     *string `toml:"bookmark_location"`
+	NavigationTool       *string `toml:"navigation_tool"`
+	Shell                *string `toml:"shell"`
+	AutoAliasSeparator   *string `toml:"auto_alias_separator"`
+	AutoAliasLowercase   *bool   `toml:"auto_alias_lowercase"`
+	HomeIcon             *string `toml:"home_icon"`
+	DefaultSortBy        *string `toml:"default_sort_by"`
 }
 
 func readConfig(path string) (*partialConfig, error) {
@@ -158,6 +165,27 @@ func applyPartial(config *domain.Config, partial *partialConfig) {
 	}
 	if partial.ListSpacing != nil {
 		config.ListSpacing = *partial.ListSpacing
+	}
+	if partial.BookmarkLocation != nil {
+		config.BookmarkLocation = expandPath(*partial.BookmarkLocation)
+	}
+	if partial.NavigationTool != nil {
+		config.NavigationTool = *partial.NavigationTool
+	}
+	if partial.Shell != nil {
+		config.Shell = *partial.Shell
+	}
+	if partial.AutoAliasSeparator != nil {
+		config.AutoAliasSeparator = *partial.AutoAliasSeparator
+	}
+	if partial.AutoAliasLowercase != nil {
+		config.AutoAliasLowercase = *partial.AutoAliasLowercase
+	}
+	if partial.HomeIcon != nil {
+		config.HomeIcon = *partial.HomeIcon
+	}
+	if partial.DefaultSortBy != nil {
+		config.DefaultSortBy = *partial.DefaultSortBy
 	}
 }
 
