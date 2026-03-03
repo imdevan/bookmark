@@ -16,9 +16,11 @@ export default defineConfig({
       editLink: {
         baseUrl: config.githubDocs,
       },
-
-      sidebar: sidebar,
       customCss: ['./src/styles/custom.css'],
+      expressiveCode: {
+        themes: ['material-theme-lighter', 'material-theme-darker'],
+      },
+      sidebar: sidebar,
     }),
   ],
 });

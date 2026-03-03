@@ -1,17 +1,455 @@
-/* Custom styles for go-cli-template docs */
+/* Bookstore-inspired theme for bookmark documentation */
 
-:root {
-  --sl-color-accent-low: #1a2332;
-  --sl-color-accent: #4a9eff;
-  --sl-color-accent-high: #b3d9ff;
+/* Force accent colors to override Starlight defaults */
+:root,
+:root[data-theme='light'] {
+  --sl-color-accent-low: #d4a574 !important;
+  --sl-color-accent: #8b5a2b !important;
+  --sl-color-accent-high: #5d3a1a !important;
 }
 
-/* Code block improvements */
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #8b5a2b !important;
+  --sl-color-accent: #e6b87d !important;
+  --sl-color-accent-high: #f5d4a8 !important;
+}
+
+/* Light mode - Warm bookstore atmosphere */
+:root {
+  /* Warm paper and wood tones */
+  --sl-color-bg: #fdfbf7;
+  --sl-color-bg-nav: #f8f4ed;
+  --sl-color-bg-sidebar: #f8f4ed;
+  --sl-color-bg-inline-code: #f0ebe0;
+  
+  /* Rich leather and wood colors - improved contrast */
+  --sl-color-accent-low: #d4a574;
+  --sl-color-accent: #8b5a2b;
+  --sl-color-accent-high: #5d3a1a;
+  
+  /* Text - dark ink on aged paper */
+  --sl-color-text: #2a2420;
+  --sl-color-text-accent: #8b5a2b;
+  --sl-color-gray-1: #2a2420;
+  --sl-color-gray-2: #3d3530;
+  --sl-color-gray-3: #5a4f47;
+  --sl-color-gray-4: #7a6d62;
+  --sl-color-gray-5: #9d9088;
+  --sl-color-gray-6: #c4b8ad;
+  
+  /* Borders - subtle wood grain */
+  --sl-color-hairline-light: #d9cfc4;
+  --sl-color-hairline: #c4b8ad;
+  
+  /* Base colors */
+  --sl-color-white: #fdfbf7;
+  --sl-color-black: #2a2420;
+  
+  /* Override Starlight's default colors */
+  --sl-color-text-invert: #fdfbf7;
+  --sl-color-bg-nav-sidebar: #f8f4ed;
+  --sl-color-banner-bg: #f8f4ed;
+  --sl-color-banner-text: #2a2420;
+}
+
+/* Force background colors in light mode */
+:root:not([data-theme='dark']) body {
+  background-color: #fdfbf7 !important;
+  color: #2a2420 !important;
+}
+
+:root:not([data-theme='dark']) .sidebar-pane {
+  background-color: #f8f4ed !important;
+}
+
+:root:not([data-theme='dark']) header {
+  background-color: #f8f4ed !important;
+  border-bottom-color: #c4b8ad !important;
+}
+
+:root:not([data-theme='dark']) .right-sidebar {
+  background-color: #fdfbf7 !important;
+}
+
+:root:not([data-theme='dark']) main {
+  background-color: #fdfbf7 !important;
+}
+
+:root:not([data-theme='dark']) nav a {
+  color: #3d3530 !important;
+}
+
+:root:not([data-theme='dark']) nav a:hover {
+  background-color: #f0ebe0 !important;
+  color: #2a2420 !important;
+}
+
+:root:not([data-theme='dark']) nav a[aria-current='page'] {
+  background-color: #d4a574 !important;
+  color: #fdfbf7 !important;
+  font-weight: 600 !important;
+}
+
+:root:not([data-theme='dark']) a {
+  color: #8b5a2b !important;
+}
+
+:root:not([data-theme='dark']) a:hover {
+  color: #5d3a1a !important;
+}
+
+:root:not([data-theme='dark']) .right-sidebar a {
+  color: #5a4f47 !important;
+}
+
+:root:not([data-theme='dark']) .right-sidebar a:hover {
+  color: #2a2420 !important;
+}
+
+:root:not([data-theme='dark']) h1,
+:root:not([data-theme='dark']) h2,
+:root:not([data-theme='dark']) h3,
+:root:not([data-theme='dark']) h4,
+:root:not([data-theme='dark']) h5,
+:root:not([data-theme='dark']) h6 {
+  color: #2a2420 !important;
+}
+
+:root:not([data-theme='dark']) code:not(pre code) {
+  background: #f0ebe0 !important;
+  border-color: #d9cfc4 !important;
+  color: #5d3a1a !important;
+}
+
+:root:not([data-theme='dark']) pre {
+  background: #f8f4ed !important;
+  border-color: #c4b8ad !important;
+}
+
+:root:not([data-theme='dark']) th {
+  background: #f8f4ed !important;
+  border-bottom-color: #c4b8ad !important;
+}
+
+:root:not([data-theme='dark']) td {
+  border-top-color: #d9cfc4 !important;
+}
+
+:root:not([data-theme='dark']) tr:hover {
+  background: #f0ebe0 !important;
+}
+
+:root:not([data-theme='dark']) blockquote {
+  background: #f0ebe0 !important;
+  border-left-color: #8b5a2b !important;
+  color: #5a4f47 !important;
+}
+
+/* Dark mode - Cozy evening bookstore */
+:root[data-theme='dark'] {
+  /* Deep wood and leather tones */
+  --sl-color-bg: #1c1714;
+  --sl-color-bg-nav: #252018;
+  --sl-color-bg-sidebar: #252018;
+  --sl-color-bg-inline-code: #2d2720;
+  
+  /* Warm amber and brass accents - improved contrast */
+  --sl-color-accent-low: #8b5a2b;
+  --sl-color-accent: #e6b87d;
+  --sl-color-accent-high: #f5d4a8;
+  
+  /* Text - bright cream on dark wood for better readability */
+  --sl-color-text: #f5ede3;
+  --sl-color-text-accent: #e6b87d;
+  --sl-color-gray-1: #f5ede3;
+  --sl-color-gray-2: #e8dfd5;
+  --sl-color-gray-3: #d9cfc4;
+  --sl-color-gray-4: #b5a99f;
+  --sl-color-gray-5: #8b7f76;
+  --sl-color-gray-6: #6b5f56;
+  
+  /* Borders - dark wood grain */
+  --sl-color-hairline-light: #3d3530;
+  --sl-color-hairline: #2d2720;
+  
+  --sl-color-white: #f5ede3;
+  --sl-color-black: #1c1714;
+}
+
+/* Code blocks - aged parchment style */
 pre {
-  border-radius: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--sl-color-hairline);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme='dark'] pre {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  border-color: var(--sl-color-hairline-light);
+}
+
+/* Inline code - subtle highlight */
+code:not(pre code) {
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  background: var(--sl-color-bg-inline-code);
+  border: 1px solid var(--sl-color-hairline-light);
+}
+
+/* Tables - classic ledger style */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+:root[data-theme='dark'] table {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+th {
+  background: var(--sl-color-bg-nav);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.05em;
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid var(--sl-color-hairline);
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--sl-color-hairline-light);
+}
+
+tr:hover {
+  background: var(--sl-color-bg-inline-code);
+}
+
+/* Links - warm hover effect */
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+a:hover {
+  color: var(--sl-color-accent-high);
+  text-decoration-color: var(--sl-color-accent-high);
+}
+
+/* Sidebar - bookshelf aesthetic */
+.sidebar {
+  border-right: 1px solid var(--sl-color-hairline);
+}
+
+:root[data-theme='dark'] .sidebar {
+  border-right-color: var(--sl-color-hairline-light);
+}
+
+/* Navigation - library catalog feel */
+nav a {
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  padding: 0.5rem 0.75rem;
+}
+
+nav a:hover {
+  background-color: var(--sl-color-bg-inline-code);
+}
+
+nav a[aria-current='page'] {
+  background-color: var(--sl-color-accent-low);
+  color: var(--sl-color-white);
+  font-weight: 600 !important;
+}
+
+:root[data-theme='dark'] nav a[aria-current='page'] {
+  background-color: var(--sl-color-accent-low);
+  color: var(--sl-color-white);
+  font-weight: 600 !important;
+}
+
+/* Blockquotes - margin notes style */
+blockquote {
+  border-left: 3px solid var(--sl-color-accent);
+  padding-left: 1.5rem;
+  margin-left: 0;
+  font-style: italic;
+  color: var(--sl-color-gray-3);
+  background: var(--sl-color-bg-inline-code);
+  padding: 1rem 1rem 1rem 1.5rem;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Cards and containers - book cover style */
+.card, .sl-container {
+  border-radius: 6px;
+  border: 1px solid var(--sl-color-hairline-light);
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06); */
+}
+
+:root[data-theme='dark'] .card,
+:root[data-theme='dark'] .sl-container {
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); */
 }
 
 /* Better spacing for API docs */
 .api-section {
   margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--sl-color-hairline-light);
 }
+
+/* Header - bookstore sign aesthetic */
+header {
+  border-bottom: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg-nav);
+}
+
+/* Search - card catalog style */
+.search-input {
+  border-radius: 6px;
+  border: 1px solid var(--sl-color-hairline);
+  background: var(--sl-color-bg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--sl-color-accent);
+  box-shadow: 0 0 0 3px var(--sl-color-accent-low);
+  outline: none;
+}
+
+/* Buttons - warm interactive style */
+button, .button {
+  border-radius: 6px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: all 0.2s ease;
+  border: 1px solid var(--sl-color-hairline);
+}
+
+button:hover, .button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  border-color: var(--sl-color-accent);
+}
+
+:root[data-theme='dark'] button:hover,
+:root[data-theme='dark'] .button:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Content area - warm reading background */
+main {
+  background: var(--sl-color-bg);
+}
+
+/* Improve heading contrast */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--sl-color-text);
+  font-weight: 600;
+}
+
+/* Dark mode specific improvements */
+:root[data-theme='dark'] h1,
+:root[data-theme='dark'] h2,
+:root[data-theme='dark'] h3,
+:root[data-theme='dark'] h4,
+:root[data-theme='dark'] h5,
+:root[data-theme='dark'] h6 {
+  color: var(--sl-color-gray-1);
+}
+
+/* Sidebar text in dark mode */
+:root[data-theme='dark'] .sidebar {
+  color: var(--sl-color-gray-1);
+}
+
+:root[data-theme='dark'] nav a {
+  color: var(--sl-color-gray-2);
+}
+
+:root[data-theme='dark'] nav a:hover {
+  color: var(--sl-color-gray-1);
+}
+
+/* Badge/tag styling - bookmarks */
+.badge, .tag {
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-white);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+/* Scrollbar - subtle wood tone */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sl-color-bg-nav);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sl-color-hairline);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sl-color-accent);
+}
+
+/* Remove borders from main content and right sidebar */
+.main-frame,
+.content-panel,
+.right-sidebar,
+.sl-markdown-content,
+article {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove borders from "On this page" section */
+.right-sidebar-panel,
+.right-sidebar-container,
+nav[aria-labelledby="starlight__on-this-page"] {
+  /* border: none !important; */
+  box-shadow: none !important;
+}
+
+/* Clean up any container borders */
+.sl-container {
+  border: none !important;
+}
+
+/* Active state for "On this page" items */
+.right-sidebar a[aria-current='true'],
+.right-sidebar a[aria-current='page'] {
+  color: var(--sl-color-accent) !important;
+  font-weight: 600 !important;
+  box-shadow: inset 3px 0 0 var(--sl-color-accent) !important;
+  /* padding-left: 0.75rem !important; */
+}
+
+:root:not([data-theme='dark']) .right-sidebar a[aria-current='true'],
+:root:not([data-theme='dark']) .right-sidebar a[aria-current='page'] {
+    color: var(--sl-color-accent) !important;
+  box-shadow: inset 3px 0 0 var(--sl-color-accent) !important;
+}
+
+:root[data-theme='dark'] .right-sidebar a[aria-current='true'],
+:root[data-theme='dark'] .right-sidebar a[aria-current='page'] {
+  box-shadow: inset 3px 0 0 var(--sl-color-accent) !important;
+}
+
+
+
