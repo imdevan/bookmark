@@ -59,16 +59,16 @@ if [ -d "$CMD_DIR" ]; then
     if [[ "$cmd_file" == *"_test.go" ]] || [[ "$cmd_file" == *"/main.go" ]] || [[ "$cmd_file" == *"/root.go" ]]; then
       continue
     fi
-    
+
     # Extract command name from filename (e.g., config.go -> config, delete_cmd.go -> delete)
     cmd_name=$(basename "$cmd_file" .go | sed 's/_cmd$//')
-    
+
     # Convert underscores to spaces for display (e.g., config_init -> config init)
     cmd_display=$(echo "$cmd_name" | sed 's/_/ /g')
-    
+
     # Convert underscores to hyphens for URL (e.g., config_init -> config-init)
     cmd_url=$(echo "$cmd_name" | sed 's/_/-/g')
-    
+
     COMMANDS="${COMMANDS}            { label: '${cmd_display}', link: '/commands/${cmd_url}' },
 "
   done
@@ -132,19 +132,19 @@ if [ -f "INSTALL.md" ]; then
   echo "  ✓ Generated install.md from INSTALL.md"
 fi
 
-# Generate configuration page placeholder
-cat >"${DOCS_CONTENT_DIR}/configuration.md" <<EOF
----
-title: Configuration
-description: Configuration options for ${PROJECT_NAME}
----
-
-Configuration file location: \`\$XDG_CONFIG_HOME/${PROJECT_NAME}/config.toml\`
-
-See the [config API documentation](/api/config) for available configuration options.
-EOF
-
-echo "  ✓ Generated configuration.md"
+# Generate configuration page from CONFIG.md
+if [ -f "CONFIG.md" ]; then
+  {
+    echo "---"
+    echo "title: Configuration"
+    echo "description: Configuration options for ${PROJECT_NAME}"
+    echo "---"
+    echo ""
+    # Skip the first heading from CONFIG.md and output the rest
+    sed '1{/^# /d;}' CONFIG.md
+  } >"${DOCS_CONTENT_DIR}/configuration.md"
+  echo "  ✓ Generated configuration.md from CONFIG.md"
+fi
 
 # Create commands directory
 mkdir -p "${DOCS_CONTENT_DIR}/commands"
@@ -153,7 +153,7 @@ mkdir -p "${DOCS_CONTENT_DIR}/commands"
 if [ -f "cmd/bookmark/root.go" ]; then
   # For root command, use the description from package.toml
   ROOT_SHORT="${DESCRIPTION}"
-  
+
   # Extract godoc comment for root command (supports both // and /* */ style)
   ROOT_GODOC=$(awk '
     /^\/\*$/ {
@@ -174,7 +174,7 @@ if [ -f "cmd/bookmark/root.go" ]; then
       }
     }
   ' "cmd/bookmark/root.go")
-  
+
   cat >"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md" <<EOF
 ---
 title: ${PROJECT_NAME}
@@ -193,12 +193,12 @@ EOF
 
   # Add godoc description if available
   if [ -n "$ROOT_GODOC" ]; then
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "## Description" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "$ROOT_GODOC" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "## Description" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "$ROOT_GODOC" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
   fi
-  
+
   # Extract flags from root.go
   root_flags=$(awk '
     /Flags\(\)\..*VarP?\(/ {
@@ -221,41 +221,41 @@ EOF
       }
     }
   ' "cmd/bookmark/root.go")
-  
+
   # Add flags table if flags were found
   if [ -n "$root_flags" ]; then
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "## Flags" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "| Flag | Type | Description |" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "|------|------|-------------|" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-    echo "$root_flags" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "## Flags" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "| Flag | Type | Description |" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "|------|------|-------------|" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+    echo "$root_flags" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
   fi
 
-  echo "" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-  echo "## Available Commands" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
-  echo "" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  echo "## Available Commands" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+  echo "" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
 
   # List all subcommands
   for cmd_file in "$CMD_DIR"/*.go; do
     if [[ "$cmd_file" == *"_test.go" ]] || [[ "$cmd_file" == *"/main.go" ]] || [[ "$cmd_file" == *"/root.go" ]]; then
       continue
     fi
-    
+
     cmd_name=$(basename "$cmd_file" .go | sed 's/_cmd$//')
     cmd_display=$(echo "$cmd_name" | sed 's/_/ /g')
     cmd_url=$(echo "$cmd_name" | sed 's/_/-/g')
-    
+
     # Extract Short description - handle both quoted strings and variables
     cmd_short=$(awk '/Short:/ {
       if (match($0, /Short: *"([^"]*)"/, arr)) {
         print arr[1]
       }
     }' "$cmd_file" | head -1)
-    
-    echo "- [\`${cmd_display}\`](/commands/${cmd_url}) - ${cmd_short}" >> "${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
+
+    echo "- [\`${cmd_display}\`](/commands/${cmd_url}) - ${cmd_short}" >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md"
   done
-  
+
   cat >>"${DOCS_CONTENT_DIR}/commands/${PROJECT_NAME}.md" <<EOF
 
 ## Source
@@ -272,25 +272,25 @@ for cmd_file in "$CMD_DIR"/*.go; do
   if [[ "$cmd_file" == *"_test.go" ]] || [[ "$cmd_file" == *"/main.go" ]] || [[ "$cmd_file" == *"/root.go" ]]; then
     continue
   fi
-  
+
   # Extract command name from filename
   cmd_name=$(basename "$cmd_file" .go | sed 's/_cmd$//')
   cmd_display=$(echo "$cmd_name" | sed 's/_/ /g')
   cmd_url=$(echo "$cmd_name" | sed 's/_/-/g')
-  
+
   # Extract command information from the Go file using awk for better parsing
   cmd_use=$(awk '/Use:/ {
     if (match($0, /Use: *"([^"]*)"/, arr)) {
       print arr[1]
     }
   }' "$cmd_file" | head -1)
-  
+
   cmd_short=$(awk '/Short:/ {
     if (match($0, /Short: *"([^"]*)"/, arr)) {
       print arr[1]
     }
   }' "$cmd_file" | head -1)
-  
+
   # Extract godoc comment (supports both // and /* */ style)
   cmd_godoc=$(awk '
     /^\/\*$/ {
@@ -311,12 +311,12 @@ for cmd_file in "$CMD_DIR"/*.go; do
       }
     }
   ' "$cmd_file")
-  
+
   # Use display name if Use is empty
   if [ -z "$cmd_use" ]; then
     cmd_use="$cmd_display"
   fi
-  
+
   # Generate command documentation
   cat >"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md" <<EOF
 ---
@@ -335,12 +335,12 @@ EOF
 
   # Add godoc description if available
   if [ -n "$cmd_godoc" ]; then
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "## Description" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "$cmd_godoc" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "## Description" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "$cmd_godoc" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
   fi
-  
+
   # Extract flags from the command file
   flags=$(awk '
     /Flags\(\)\..*VarP?\(/ {
@@ -367,17 +367,17 @@ EOF
       }
     }
   ' "$cmd_file")
-  
+
   # Add flags table if flags were found
   if [ -n "$flags" ]; then
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "## Flags" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "| Flag | Type | Description |" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "|------|------|-------------|" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
-    echo "$flags" >> "${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "## Flags" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "| Flag | Type | Description |" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "|------|------|-------------|" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
+    echo "$flags" >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md"
   fi
-  
+
   # Add source link
   cat >>"${DOCS_CONTENT_DIR}/commands/${cmd_url}.md" <<EOF
 
