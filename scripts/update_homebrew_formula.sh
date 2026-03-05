@@ -20,12 +20,15 @@ VERSION="${VERSION#v}"
 
 # Read package metadata
 NAME="$(parse_toml_key "${PACKAGE_TOML}" "name")"
+PACKAGE_NAME="$(parse_toml_key "${PACKAGE_TOML}" "package_name")"
+# Fall back to name if package_name is not set
+PACKAGE_NAME="${PACKAGE_NAME:-$NAME}"
 REPO_URL="$(parse_toml_key "${PACKAGE_TOML}" "repository")"
 DESCRIPTION="$(parse_toml_key "${PACKAGE_TOML}" "description")"
 HOMEPAGE="$(parse_toml_key "${PACKAGE_TOML}" "homepage")"
 
-TAP_DIR="${ROOT_DIR}/../homebrew-${NAME}"
-FORMULA_PATH="${TAP_DIR}/Formula/${NAME}.rb"
+TAP_DIR="${ROOT_DIR}/homebrew-${PACKAGE_NAME}"
+FORMULA_PATH="${TAP_DIR}/Formula/${PACKAGE_NAME}.rb"
 
 if [[ ! -d "${TAP_DIR}" ]]; then
 	echo "❌ Homebrew tap not found at: ${TAP_DIR}"
@@ -45,7 +48,7 @@ fi
 echo "✅ SHA256: ${SHA256}"
 
 # Update formula
-CLASS_NAME="$(echo "${NAME}" | sed 's/.*/\u&/')"
+CLASS_NAME="$(echo "${PACKAGE_NAME}" | sed 's/-/ /g; s/\b\(.\)/\u\1/g; s/ //g')"
 
 cat >"${FORMULA_PATH}" <<EOF
 class ${CLASS_NAME} < Formula
@@ -58,7 +61,7 @@ class ${CLASS_NAME} < Formula
   depends_on "go" => :build
 
   def install
-    system "go", "build", *std_go_args(ldflags: "-s -w"), "./cmd/${NAME}"
+    system "go", "build", *std_go_args(ldflags: "-s -w", output: bin/"${NAME}"), "./cmd/${NAME}"
   end
 
   test do
@@ -74,6 +77,6 @@ echo "1. Test the formula locally:"
 echo "   brew install --build-from-source ${FORMULA_PATH}"
 echo "2. Commit and push:"
 echo "   cd ${TAP_DIR}"
-echo "   git add Formula/${NAME}.rb"
-echo "   git commit -m \"Update ${NAME} to v${VERSION}\""
+echo "   git add Formula/${PACKAGE_NAME}.rb"
+echo "   git commit -m \"Update ${PACKAGE_NAME} to v${VERSION}\""
 echo "   git push"
