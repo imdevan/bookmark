@@ -2,6 +2,10 @@
 bin
 dist
 
+# Package distribution repositories
+aur-*
+homebrew-*
+
 # Documentation
 docs/node_modules/
 docs/dist/

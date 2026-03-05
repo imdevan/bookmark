@@ -93,3 +93,16 @@ tag-list:
 	@echo "📋 Available tags:"
 	@git tag -l --sort=-v:refname | head -20
 
+# Release management
+release VERSION="":
+	./scripts/release.sh {{VERSION}}
+
+deploy-aur VERSION="":
+	./scripts/deploy_aur.sh {{VERSION}}
+
+deploy-homebrew VERSION="":
+	./scripts/deploy_homebrew.sh {{VERSION}}
+
+deploy-all VERSION="":
+	./scripts/deploy_all.sh {{VERSION}}
+
