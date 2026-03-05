@@ -81,8 +81,11 @@ if [ -d "${ROOT_DIR}/internal" ]; then
     if [[ "$pkg_name" == "testutil" ]]; then
       continue
     fi
-    API_PACKAGES="${API_PACKAGES}            { label: '${pkg_name}', link: '/api/${pkg_name}' },
+    # Check if directory contains Go files (is a package, not just a folder)
+    if ls "$pkg"*.go >/dev/null 2>&1; then
+      API_PACKAGES="${API_PACKAGES}            { label: '${pkg_name}', link: '/api/${pkg_name}' },
 "
+    fi
   done
 fi
 
