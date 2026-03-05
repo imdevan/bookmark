@@ -104,43 +104,22 @@ DOCS_CONTENT_DIR="docs/src/content/docs"
 
 # Generate index page from README.md
 if [ -f "README.md" ]; then
-  {
-    echo "---"
-    echo "title: ${PROJECT_NAME}"
-    echo "description: ${DESCRIPTION}"
-    echo "---"
-    echo ""
-    # Skip the first heading from README and output the rest
-    sed '1{/^# /d;}' README.md
-  } >"${DOCS_CONTENT_DIR}/index.md"
+  convert_with_frontmatter "README.md" "${DOCS_CONTENT_DIR}/index.md" \
+    "${PROJECT_NAME}" "${DESCRIPTION}"
   echo "  ✓ Generated index.md from README.md"
 fi
 
 # Generate install page from INSTALL.md
 if [ -f "INSTALL.md" ]; then
-  {
-    echo "---"
-    echo "title: Install"
-    echo "description: Installation instructions for ${PROJECT_NAME}"
-    echo "---"
-    echo ""
-    # Skip the first heading from INSTALL.md and output the rest
-    sed '1{/^# /d;}' INSTALL.md
-  } >"${DOCS_CONTENT_DIR}/install.md"
+  convert_with_frontmatter "INSTALL.md" "${DOCS_CONTENT_DIR}/install.md" \
+    "Install" "Installation instructions for ${PROJECT_NAME}"
   echo "  ✓ Generated install.md from INSTALL.md"
 fi
 
 # Generate configuration page from CONFIG.md
 if [ -f "CONFIG.md" ]; then
-  {
-    echo "---"
-    echo "title: Configuration"
-    echo "description: Configuration options for ${PROJECT_NAME}"
-    echo "---"
-    echo ""
-    # Skip the first heading from CONFIG.md and output the rest
-    sed '1{/^# /d;}' CONFIG.md
-  } >"${DOCS_CONTENT_DIR}/configuration.md"
+  convert_with_frontmatter "CONFIG.md" "${DOCS_CONTENT_DIR}/configuration.md" \
+    "Configuration" "Configuration options for ${PROJECT_NAME}"
   echo "  ✓ Generated configuration.md from CONFIG.md"
 fi
 
@@ -416,7 +395,7 @@ for pkg in internal/*/; do
     continue
   }
 
-  # Add frontmatter and content (skip HTML comment and blank lines)
+  # Add frontmatter and content (skip HTML comment and any frontmatter that gomarkdoc added)
   {
     echo "---"
     echo "title: ${pkg_name}"
@@ -442,7 +421,7 @@ for adapter in internal/adapters/*/; do
     continue
   }
 
-  # Add frontmatter and content (skip HTML comment and blank lines)
+  # Add frontmatter and content (skip HTML comment and any frontmatter that gomarkdoc added)
   {
     echo "---"
     echo "title: adapters/${adapter_name}"
