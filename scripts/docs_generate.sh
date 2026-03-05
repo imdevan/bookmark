@@ -72,6 +72,30 @@ if [ -d "$CMD_DIR" ]; then
   done
 fi
 
+# Detect API packages
+API_PACKAGES=""
+if [ -d "${ROOT_DIR}/internal" ]; then
+  for pkg in "${ROOT_DIR}/internal"/*/; do
+    pkg_name=$(basename "$pkg")
+    # Skip testutil
+    if [[ "$pkg_name" == "testutil" ]]; then
+      continue
+    fi
+    API_PACKAGES="${API_PACKAGES}            { label: '${pkg_name}', link: '/api/${pkg_name}' },
+"
+  done
+fi
+
+# Detect API adapters
+API_ADAPTERS=""
+if [ -d "${ROOT_DIR}/internal/adapters" ]; then
+  for adapter in "${ROOT_DIR}/internal/adapters"/*/; do
+    adapter_name=$(basename "$adapter")
+    API_ADAPTERS="${API_ADAPTERS}              { label: '${adapter_name}', link: '/api/adapters/${adapter_name}' },
+"
+  done
+fi
+
 # Generate sidebar.mjs
 cat >"$DOCS_SIDEBAR" <<EOF
 export default [
@@ -93,10 +117,20 @@ ${COMMANDS}    ],
     label: 'Configuration',
     link: '/configuration',
   },
+  {
+    label: 'API Reference',
+    items: [
+${API_PACKAGES}      {
+        label: 'Adapters',
+        items: [
+${API_ADAPTERS}        ],
+      },
+    ],
+  },
 ]
 EOF
 
-echo "  ✓ Generated sidebar.mjs with detected commands"
+echo "  ✓ Generated sidebar.mjs with detected commands and API packages"
 
 echo "📝 Generating content pages..."
 
