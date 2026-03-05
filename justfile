@@ -81,3 +81,15 @@ update-homebrew-formula VERSION:
 update-aur-pkgbuild VERSION:
 	@echo "📦 Updating AUR PKGBUILD to version {{VERSION}}..."
 	./scripts/update_aur_pkgbuild.sh {{VERSION}}
+
+# Git tag management
+tag VERSION="":
+	./scripts/tag.sh {{VERSION}}
+
+tag-delete VERSION="":
+	./scripts/tag_delete.sh {{VERSION}}
+
+tag-list:
+	@echo "📋 Available tags:"
+	@git tag -l --sort=-v:refname | head -20
+
