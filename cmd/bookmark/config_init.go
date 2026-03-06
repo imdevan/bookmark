@@ -104,6 +104,7 @@ func renderConfigTemplate(cfg domain.Config) string {
 	builder.WriteString("\n# Auto-alias generation\n")
 	builder.WriteString(fmt.Sprintf("# auto_alias_separator = %q  # Character between first letters (empty = \"mcp\", \"-\" = \"m-c-p\")\n", cfg.AutoAliasSeparator))
 	builder.WriteString(fmt.Sprintf("# auto_alias_lowercase = %t\n", cfg.AutoAliasLowercase))
+	builder.WriteString(fmt.Sprintf("# default_alias_part_length = %d  # Number of characters to take from each part (1 = first letter only)\n", cfg.DefaultAliasPartLength))
 	
 	builder.WriteString("\n# Function alias wrapper\n")
 	builder.WriteString("# When enabled, adds a shell function that auto-sources bookmarks after running bookmark commands\n")
