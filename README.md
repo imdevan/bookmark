@@ -1,6 +1,6 @@
 # Bookmark
 
-<img width="480" height="270" alt="screenshot-2026-02-23_16-30-13" src="https://github.com/user-attachments/assets/65386b56-f06f-47be-9063-5c947b30dc51" />
+<img width="407" height="270" alt="screenshot-2026-03-06_14-10-16" src="https://github.com/user-attachments/assets/081eeec6-bbbd-4687-b29a-b659892a5e58" />
 
 A bookmark manager for your favorite shell
 
