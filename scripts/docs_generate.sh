@@ -99,6 +99,28 @@ if [ -d "${ROOT_DIR}/internal/adapters" ]; then
   done
 fi
 
+# Check if API Reference should be included
+# Include if: NODE_ENV is not "production" OR package_name is "go-cli-template"
+INCLUDE_API_REFERENCE=false
+if [ "${NODE_ENV:-}" != "production" ] || [ "${PROJECT_NAME}" = "go-cli-template" ]; then
+  INCLUDE_API_REFERENCE=true
+fi
+
+# Build API Reference section if needed
+API_REFERENCE_SECTION=""
+if [ "$INCLUDE_API_REFERENCE" = true ]; then
+  API_REFERENCE_SECTION="  {
+    label: 'API Reference',
+    items: [
+${API_PACKAGES}      {
+        label: 'Adapters',
+        items: [
+${API_ADAPTERS}        ],
+      },
+    ],
+  },"
+fi
+
 # Generate sidebar.mjs
 cat >"$DOCS_SIDEBAR" <<EOF
 export default [
@@ -120,16 +142,7 @@ ${COMMANDS}    ],
     label: 'Configuration',
     link: '/configuration',
   },
-  {
-    label: 'API Reference',
-    items: [
-${API_PACKAGES}      {
-        label: 'Adapters',
-        items: [
-${API_ADAPTERS}        ],
-      },
-    ],
-  },
+${API_REFERENCE_SECTION}
 ]
 EOF
 
