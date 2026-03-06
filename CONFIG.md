@@ -2,6 +2,8 @@
 
 Configuration file location: `$XDG_CONFIG_HOME/bookmark/config.toml`
 
+Most likely `~/.config/bookmark/config.toml`
+
 ## Configuration Options
 
 The following options can be set in your configuration file:
