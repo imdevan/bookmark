@@ -74,9 +74,9 @@ func TestDefaultConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("has interactive default enabled", func(t *testing.T) {
-		if !cfg.InteractiveDefault {
-			t.Error("DefaultConfig().InteractiveDefault should be true")
+	t.Run("has interactive default disabled", func(t *testing.T) {
+		if cfg.InteractiveDefault {
+			t.Error("DefaultConfig().InteractiveDefault should be false")
 		}
 	})
 

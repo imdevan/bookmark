@@ -278,8 +278,8 @@ func TestManagerPartialConfig(t *testing.T) {
 		if cfg.Headings != "15" {
 			t.Errorf("expected default headings, got %q", cfg.Headings)
 		}
-		if !cfg.InteractiveDefault {
-			t.Error("expected default interactive_default to be true")
+		if cfg.InteractiveDefault {
+			t.Error("expected default interactive_default to be false")
 		}
 	})
 }

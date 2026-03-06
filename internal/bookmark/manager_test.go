@@ -11,52 +11,98 @@ import (
 
 func TestGenerateAlias(t *testing.T) {
 	tests := []struct {
-		name      string
-		path      string
-		separator string
-		lowercase bool
-		want      string
+		name       string
+		path       string
+		separator  string
+		lowercase  bool
+		partLength int
+		want       string
 	}{
 		{
-			name:      "simple path",
-			path:      "/home/user/my-cool-project",
-			separator: "",
-			lowercase: true,
-			want:      "mcp",
+			name:       "simple path - first letter",
+			path:       "/home/user/my-cool-project",
+			separator:  "",
+			lowercase:  true,
+			partLength: 1,
+			want:       "mcp",
 		},
 		{
-			name:      "with separator",
-			path:      "/home/user/my-cool-project",
-			separator: "-",
-			lowercase: true,
-			want:      "m-c-p",
+			name:       "simple path - two letters",
+			path:       "/home/user/my-cool-project",
+			separator:  "",
+			lowercase:  true,
+			partLength: 2,
+			want:       "mycopr",
 		},
 		{
-			name:      "uppercase",
-			path:      "/home/user/my-cool-project",
-			separator: "",
-			lowercase: false,
-			want:      "MCP",
+			name:       "with separator",
+			path:       "/home/user/my-cool-project",
+			separator:  "-",
+			lowercase:  true,
+			partLength: 1,
+			want:       "m-c-p",
 		},
 		{
-			name:      "underscore separated",
-			path:      "/home/user/web_app_project",
-			separator: "",
-			lowercase: true,
-			want:      "wap",
+			name:       "uppercase",
+			path:       "/home/user/my-cool-project",
+			separator:  "",
+			lowercase:  false,
+			partLength: 1,
+			want:       "MCP",
 		},
 		{
-			name:      "single word",
-			path:      "/home/user/projects",
-			separator: "",
-			lowercase: true,
-			want:      "p",
+			name:       "uppercase - two letters",
+			path:       "/home/user/my-cool-project",
+			separator:  "",
+			lowercase:  false,
+			partLength: 2,
+			want:       "MYCOPR",
+		},
+		{
+			name:       "underscore separated",
+			path:       "/home/user/web_app_project",
+			separator:  "",
+			lowercase:  true,
+			partLength: 1,
+			want:       "wap",
+		},
+		{
+			name:       "single word",
+			path:       "/home/user/projects",
+			separator:  "",
+			lowercase:  true,
+			partLength: 1,
+			want:       "p",
+		},
+		{
+			name:       "part length exceeds all part lengths",
+			path:       "/home/user/a-b-c",
+			separator:  "",
+			lowercase:  true,
+			partLength: 5,
+			want:       "abc",
+		},
+		{
+			name:       "part length exceeds some parts but not others",
+			path:       "/home/user/my-cool-project",
+			separator:  "",
+			lowercase:  true,
+			partLength: 5,
+			want:       "mycoolproje",
+		},
+		{
+			name:       "part length exceeds single-word path",
+			path:       "/home/user/go",
+			separator:  "",
+			lowercase:  true,
+			partLength: 5,
+			want:       "go",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GenerateAlias(tt.path, tt.separator, tt.lowercase)
+			got := GenerateAlias(tt.path, tt.separator, tt.lowercase, tt.partLength)
 			if got != tt.want {
 				t.Errorf("GenerateAlias() = %v, want %v", got, tt.want)
 			}
