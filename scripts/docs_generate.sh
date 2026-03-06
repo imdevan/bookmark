@@ -121,9 +121,22 @@ ${API_ADAPTERS}        ],
   },"
 fi
 
-# Generate sidebar.mjs
+# Generate sidebar.mjs with dynamic environment check
 cat >"$DOCS_SIDEBAR" <<EOF
-export default [
+import config from './config.mjs';
+
+const apiReference = {
+  label: 'API Reference',
+  items: [
+${API_PACKAGES}    {
+      label: 'Adapters',
+      items: [
+${API_ADAPTERS}      ],
+    },
+  ],
+};
+
+const sidebar = [
   {
     label: '${PROJECT_NAME}',
     link: '/',
@@ -142,8 +155,16 @@ ${COMMANDS}    ],
     label: 'Configuration',
     link: '/configuration',
   },
-${API_REFERENCE_SECTION}
-]
+];
+
+// Add API Reference if not in production or if this is go-cli-template
+const isProduction = process.env.NODE_ENV === 'production';
+const projectName = '${PROJECT_NAME}';
+if (!isProduction || projectName === 'go-cli-template') {
+  sidebar.push(apiReference);
+}
+
+export default sidebar;
 EOF
 
 echo "  ✓ Generated sidebar.mjs with detected commands and API packages"
