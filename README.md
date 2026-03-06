@@ -12,8 +12,19 @@ A bookmark manager for your favorite shell
 ## Install
 
 ```bash
-just build-run
+# With homebrew
+homebrew install imdevan/bookmark/bookmark
+
+# With AUR
+yay -S bookmark-plus
+
+# Manual
+git clone https://github.com/imdevan/bookmark.git
+cd bookmark
+just build && sudo just install
 ```
+
+See [install](https://devan.gg/bookmark/install/)  docs for more information.
 
 
 ## Bookmark your favorite folder
