@@ -12,6 +12,7 @@ shell = "zsh"                       # Options: bash, zsh, fish, nu (auto-detecte
 # Auto-alias generation
 auto_alias_separator = ""   # Character between first letters (empty = "mcp", "-" = "m-c-p")
 auto_alias_lowercase = true
+default_alias_part_length = 1  # Number of characters to take from each part (1 = first letter only, 2 = "mycopr" from "my-cool-project")
 
 # Function alias wrapper
 # When enabled, adds a shell function that auto-sources bookmarks after running bookmark commands

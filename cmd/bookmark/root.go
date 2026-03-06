@@ -202,7 +202,7 @@ func generateAlias(args []string, cwd string, cfg domain.Config) string {
 	if len(args) > 0 {
 		return args[0]
 	}
-	return bookmark.GenerateAlias(cwd, cfg.AutoAliasSeparator, cfg.AutoAliasLowercase)
+	return bookmark.GenerateAlias(cwd, cfg.AutoAliasSeparator, cfg.AutoAliasLowercase, cfg.DefaultAliasPartLength)
 }
 
 func confirmOverwrite(cmd *cobra.Command, bmManager *bookmark.Manager, alias string, cfg domain.Config) bool {

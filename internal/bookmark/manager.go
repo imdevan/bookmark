@@ -357,7 +357,8 @@ func (m *Manager) Exists(alias string) (bool, error) {
 }
 
 // GenerateAlias creates an alias from a directory path.
-func GenerateAlias(path string, separator string, lowercase bool) string {
+// partLength specifies how many characters to take from each part (default: 1 for first letter only).
+func GenerateAlias(path string, separator string, lowercase bool, partLength int) string {
 	base := filepath.Base(path)
 
 	// Split on common separators
@@ -369,20 +370,32 @@ func GenerateAlias(path string, separator string, lowercase bool) string {
 		return "bm"
 	}
 
-	// Take first letter of each part
+	// Default to 1 if invalid
+	if partLength < 1 {
+		partLength = 1
+	}
+
+	// Take N characters from each part
 	var alias strings.Builder
 	for i, part := range parts {
 		if len(part) > 0 {
 			if i > 0 && separator != "" {
 				alias.WriteString(separator)
 			}
-			firstChar := string(part[0])
-			if lowercase {
-				firstChar = strings.ToLower(firstChar)
-			} else {
-				firstChar = strings.ToUpper(firstChar)
+			
+			// Take up to partLength characters from this part
+			endIdx := partLength
+			if endIdx > len(part) {
+				endIdx = len(part)
 			}
-			alias.WriteString(firstChar)
+			
+			partStr := part[:endIdx]
+			if lowercase {
+				partStr = strings.ToLower(partStr)
+			} else {
+				partStr = strings.ToUpper(partStr)
+			}
+			alias.WriteString(partStr)
 		}
 	}
 
