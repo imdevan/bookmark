@@ -27,8 +27,8 @@
 - [x] 2.5 bookmark add should accept arguments and flags, same as root command
   - -xfistTy, functionally same as calling bookmark [alias] [flags]
   - open interactively prefilled unless -y passed or 
-- [ ] 2.5 ensure all args are escaped correctly. files paths, scripts with quotes, descriptions
-  - [ ] 2.5.1 add explanation to docs
+- [x] 2.5 ensure all args are escaped correctly. files paths, scripts with quotes, descriptions
+  - [x] 2.5.1 add explanation to docs
 
 ## Feature 3: import l scripts
 - [x] 3.1 import l scripts
@@ -84,3 +84,25 @@ bm() {
   - [x] 5.2.1 add config 
   - [x] 5.2.2 add to config init
   - [x] 5.2.3 add to config docs
+
+## Feature 6: command refactor
+- [x] 6.1 combine calling functions
+  - [x] 6.1.1 combine calling functions in dotfiles/config/stow/bookmarks/.bookmarks/bookmarks.sh:6 & 12
+  - [x] 6.1.2 show interactive if no args or commands otherwise execute
+  - [x] 6.1.3 update in config generation, not the sh file
+- [x] 6.2 update commands
+  - [x] 6.2.1 root: no_args_or_commands shows interactive (dotfiles/config/stow/bookmarks/.bookmarks/bookmarks.sh:13)
+  - [x] 6.2.2 add: show add form, same as current add
+  - [x] 6.2.3 edit: command to show edit form, same as -e, remove -e
+  - [x] 6.2.4 delete: command to delete, same as current delete
+  - [x] 6.2.5 *: add bookmark at current location with alias provided 
+
+
+## Feature 7: first call
+- [x] 7.1 init config
+- [x] 7.2 check for ~/.bookmarks/bookmarks.zsh
+  - BOOKMARKS_LOADED var at end of file probably? 
+  - prompter user to add to shell rc file (depending on which shell)
+- thought: what if a user fucks with the file?
+  - check sum hash on file for edits?
+  - sqlite db for storing actual aliases? + checksum?
