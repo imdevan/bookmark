@@ -524,10 +524,20 @@ func escapeShellArg(arg string, shellType string) string {
 		escaped := strings.ReplaceAll(arg, "'", "''")
 		return fmt.Sprintf("'%s'", escaped)
 	default: // bash, zsh, sh
-		escaped := strings.ReplaceAll(arg, "'", "'\\''")
-		return fmt.Sprintf("'%s'", escaped)
+		// Inner arguments use double quotes because the whole command is later
+		// wrapped in single quotes by the alias formatter. Escape characters that
+		// remain special inside double quotes.
+		escaped := posixDoubleQuoteEscaper.Replace(arg)
+		return fmt.Sprintf("\"%s\"", escaped)
 	}
 }
+
+var posixDoubleQuoteEscaper = strings.NewReplacer(
+	"\\", "\\\\",
+	"\"", "\\\"",
+	"$", "\\$",
+	"`", "\\`",
+)
 
 func escapeMetadataField(s string) string {
 	s = strings.ReplaceAll(s, "\\", "\\\\")

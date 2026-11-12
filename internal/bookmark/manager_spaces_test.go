@@ -115,7 +115,7 @@ func TestManager_BuildNavigationCommand_WithSpaces(t *testing.T) {
 				Alias: "test",
 				Path:  "/home/user/my projects/test",
 			},
-			want: "cd '/home/user/my projects/test'",
+			want: "cd \"/home/user/my projects/test\"",
 		},
 		{
 			name: "path and file with spaces",
@@ -124,7 +124,7 @@ func TestManager_BuildNavigationCommand_WithSpaces(t *testing.T) {
 				Path:  "/home/user/my projects/test",
 				File:  "my file.txt",
 			},
-			want: "cd '/home/user/my projects/test' && nvim 'my file.txt'",
+			want: "cd \"/home/user/my projects/test\" && nvim \"my file.txt\"",
 		},
 		{
 			name: "path with spaces and tmux",
@@ -133,7 +133,7 @@ func TestManager_BuildNavigationCommand_WithSpaces(t *testing.T) {
 				Path:           "/home/user/my projects/test",
 				TmuxWindowName: "mywindow",
 			},
-			want: "cd '/home/user/my projects/test' && tmux rename-window 'mywindow'",
+			want: "cd \"/home/user/my projects/test\" && tmux rename-window \"mywindow\"",
 		},
 		{
 			name: "path with spaces and execute",
@@ -142,7 +142,7 @@ func TestManager_BuildNavigationCommand_WithSpaces(t *testing.T) {
 				Path:    "/home/user/my projects/test",
 				Execute: "ls -la",
 			},
-			want: "cd '/home/user/my projects/test' && ls -la",
+			want: "cd \"/home/user/my projects/test\" && ls -la",
 		},
 	}
 

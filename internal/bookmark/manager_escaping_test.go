@@ -24,7 +24,7 @@ func TestManager_BuildNavigationCommand_WithQuotes(t *testing.T) {
 				Alias: "test",
 				Path:  "/home/user/let's-go/test",
 			},
-			want: "cd '/home/user/let'\\''s-go/test'",
+			want: "cd \"/home/user/let's-go/test\"",
 		},
 		{
 			name:  "fish single quote in path",
@@ -53,7 +53,16 @@ func TestManager_BuildNavigationCommand_WithQuotes(t *testing.T) {
 				File:           "some'file.txt",
 				TmuxWindowName: "tmux'win",
 			},
-			want: "cd '/home/user/project' && tmux rename-window 'tmux'\\''win' && nvim 'some'\\''file.txt'",
+			want: "cd \"/home/user/project\" && tmux rename-window \"tmux'win\" && nvim \"some'file.txt\"",
+		},
+		{
+			name:  "bash double quote, dollar and backslash in path",
+			shell: "bash",
+			bookmark: domain.Bookmark{
+				Alias: "test",
+				Path:  `/home/user/a"b$c\d`,
+			},
+			want: `cd "/home/user/a\"b\$c\\d"`,
 		},
 	}
 
@@ -159,5 +168,32 @@ func TestManager_SaveAndLoad_WithPipesAndNewlines(t *testing.T) {
 		if got.File != want.File {
 			t.Errorf("Bookmark[%d].File = %q, want %q", i, got.File, want.File)
 		}
+	}
+}
+
+func TestAliasOutput_UsesDoubleQuotesInsideSingleQuotes(t *testing.T) {
+	tmpDir := t.TempDir()
+	filePath := filepath.Join(tmpDir, "bookmarks.sh")
+	m := NewManager(filePath, "bash", "cd", "nvim", "false", "false")
+
+	bm := domain.Bookmark{
+		Alias:          "vb",
+		Path:           "/home/devy/.bookmarks/",
+		TmuxWindowName: "vb",
+		File:           "/home/devy/.bookmarks/bookmarks.sh",
+	}
+	if err := m.Add(bm); err != nil {
+		t.Fatalf("Add() error = %v", err)
+	}
+	content, err := os.ReadFile(filePath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := `alias vb='cd "/home/devy/.bookmarks/" && tmux rename-window "vb" && nvim "/home/devy/.bookmarks/bookmarks.sh"'`
+	if !strings.Contains(string(content), want) {
+		t.Errorf("generated file missing %q:\n%s", want, content)
+	}
+	if strings.Contains(string(content), `'\''`) {
+		t.Errorf("generated file should not contain escaped single quotes:\n%s", content)
 	}
 }

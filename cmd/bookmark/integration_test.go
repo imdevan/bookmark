@@ -501,7 +501,7 @@ func TestIntegration_AliasStructure(t *testing.T) {
 		t.Error("expected alias to contain tmux rename-window")
 	}
 	// Check for quoted path (paths are now properly quoted)
-	if !strings.Contains(aliasLine, "cd '") && !strings.Contains(aliasLine, "cd "+testDir) {
+	if !strings.Contains(aliasLine, "cd \"") && !strings.Contains(aliasLine, "cd "+testDir) {
 		t.Errorf("expected alias to contain cd command with path")
 	}
 	if !strings.Contains(aliasLine, "echo") {
