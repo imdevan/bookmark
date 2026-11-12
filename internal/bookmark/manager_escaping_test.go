@@ -126,11 +126,11 @@ func TestManager_SaveAndLoad_WithPipesAndNewlines(t *testing.T) {
 	for _, line := range lines {
 		if strings.HasPrefix(line, "# BM:") {
 			// Find how many unescaped pipes there are.
-			// Since there should be exactly 8 unescaped pipes to separate 9 fields,
+			// Since there should be exactly 7 unescaped pipes to separate 8 fields,
 			// let's check our splitMetadata function.
 			parts := splitMetadata(strings.TrimPrefix(line, "# BM: "))
-			if len(parts) != 9 {
-				t.Errorf("expected 9 fields in metadata, got %d from line:\n%s", len(parts), line)
+			if len(parts) != 8 {
+				t.Errorf("expected 8 fields in metadata, got %d from line:\n%s", len(parts), line)
 			}
 		}
 	}
@@ -195,5 +195,52 @@ func TestAliasOutput_UsesDoubleQuotesInsideSingleQuotes(t *testing.T) {
 	}
 	if strings.Contains(string(content), `'\''`) {
 		t.Errorf("generated file should not contain escaped single quotes:\n%s", content)
+	}
+}
+
+func TestDescription_StoredAsTrailingComment(t *testing.T) {
+	filePath := filepath.Join(t.TempDir(), "bookmarks.sh")
+	m := NewManager(filePath, "bash", "cd", "nvim", "false", "false")
+
+	bm := domain.Bookmark{
+		Alias:       "foo",
+		Path:        "/tmp/proj",
+		Description: "vim bookmarks # not code",
+		Execute:     `echo "hi # there" | cowsay`,
+	}
+	if err := m.Add(bm); err != nil {
+		t.Fatal(err)
+	}
+	content, _ := os.ReadFile(filePath)
+	if strings.Contains(strings.SplitN(strings.Split(string(content), "# BM: ")[1], "\n", 2)[0], "vim bookmarks") {
+		t.Errorf("description should not be in BM line:\n%s", content)
+	}
+	want := `alias foo='cd "/tmp/proj" && echo "hi # there" | cowsay' # vim bookmarks # not code`
+	if !strings.Contains(string(content), want) {
+		t.Errorf("missing %q in:\n%s", want, content)
+	}
+	loaded, err := m.Load()
+	if err != nil || len(loaded) != 1 {
+		t.Fatalf("Load() = %v, %v", loaded, err)
+	}
+	if loaded[0].Description != bm.Description || loaded[0].Execute != bm.Execute {
+		t.Errorf("round trip mismatch: %+v", loaded[0])
+	}
+}
+
+func TestLoad_LegacyNineFieldMetadata(t *testing.T) {
+	filePath := filepath.Join(t.TempDir(), "bookmarks.sh")
+	legacy := "# BM: vb|/home/devy/.bookmarks/|vim bookmarks|2026-11-11T18:02:23-08:00|2026-11-11T18:03:26-08:00|vb|||/home/devy/.bookmarks/bookmarks.sh\nalias vb='cd x'\n\n"
+	if err := os.WriteFile(filePath, []byte(legacy), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	m := NewManager(filePath, "bash", "cd", "nvim", "false", "false")
+	loaded, err := m.Load()
+	if err != nil || len(loaded) != 1 {
+		t.Fatalf("Load() = %v, %v", loaded, err)
+	}
+	got := loaded[0]
+	if got.Description != "vim bookmarks" || got.TmuxWindowName != "vb" || got.File != "/home/devy/.bookmarks/bookmarks.sh" {
+		t.Errorf("legacy parse wrong: %+v", got)
 	}
 }

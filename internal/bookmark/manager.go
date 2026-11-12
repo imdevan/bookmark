@@ -119,32 +119,43 @@ func (m *Manager) parseShellScript(content string) ([]domain.Bookmark, error) {
 			}
 			currentBookmark = &domain.Bookmark{}
 
-			// Parse metadata: # BM: alias|path|desc|created|updated|tmux|execute|postscript|file
+			// Current layout: # BM: alias|path|created|updated|tmux|execute|postscript|file
+			// Legacy layout (9 fields) also held the description after path.
 			parts := splitMetadata(strings.TrimPrefix(line, "# BM: "))
+			if len(parts) == 9 {
+				currentBookmark.Description = unescapeMetadataField(parts[2])
+				parts = append(parts[:2], parts[3:]...)
+			}
 			if len(parts) >= 2 {
 				currentBookmark.Alias = unescapeMetadataField(parts[0])
 				currentBookmark.Path = unescapeMetadataField(parts[1])
 			}
-			if len(parts) >= 3 {
-				currentBookmark.Description = unescapeMetadataField(parts[2])
+			if len(parts) >= 3 && parts[2] != "" {
+				currentBookmark.CreatedAt, _ = time.Parse(time.RFC3339, parts[2])
 			}
 			if len(parts) >= 4 && parts[3] != "" {
-				currentBookmark.CreatedAt, _ = time.Parse(time.RFC3339, parts[3])
+				currentBookmark.UpdatedAt, _ = time.Parse(time.RFC3339, parts[3])
 			}
-			if len(parts) >= 5 && parts[4] != "" {
-				currentBookmark.UpdatedAt, _ = time.Parse(time.RFC3339, parts[4])
+			if len(parts) >= 5 {
+				currentBookmark.TmuxWindowName = unescapeMetadataField(parts[4])
 			}
 			if len(parts) >= 6 {
-				currentBookmark.TmuxWindowName = unescapeMetadataField(parts[5])
+				currentBookmark.Execute = unescapeMetadataField(parts[5])
 			}
 			if len(parts) >= 7 {
-				currentBookmark.Execute = unescapeMetadataField(parts[6])
+				currentBookmark.PostJumpScript = unescapeMetadataField(parts[6])
 			}
 			if len(parts) >= 8 {
-				currentBookmark.PostJumpScript = unescapeMetadataField(parts[7])
+				currentBookmark.File = unescapeMetadataField(parts[7])
 			}
-			if len(parts) >= 9 {
-				currentBookmark.File = unescapeMetadataField(parts[8])
+			continue
+		}
+
+		// The description lives in a trailing comment on the alias/function line.
+		if currentBookmark != nil && currentBookmark.Description == "" &&
+			(strings.HasPrefix(line, "alias ") || strings.HasPrefix(line, "function ")) {
+			if desc, ok := trailingComment(line); ok {
+				currentBookmark.Description = unescapeMetadataField(desc)
 			}
 		}
 	}
@@ -191,10 +202,9 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 
 	for _, bm := range bookmarks {
 		// Write metadata as comment
-		metadata := fmt.Sprintf("# BM: %s|%s|%s|%s|%s|%s|%s|%s|%s\n",
+		metadata := fmt.Sprintf("# BM: %s|%s|%s|%s|%s|%s|%s|%s\n",
 			escapeMetadataField(bm.Alias),
 			escapeMetadataField(bm.Path),
-			escapeMetadataField(bm.Description),
 			bm.CreatedAt.Format(time.RFC3339),
 			bm.UpdatedAt.Format(time.RFC3339),
 			escapeMetadataField(bm.TmuxWindowName),
@@ -206,7 +216,7 @@ func (m *Manager) generateShellScript(bookmarks []domain.Bookmark) error {
 
 		// Write shell alias/function using adapter
 		cmd := m.BuildNavigationCommand(bm)
-		aliasStr := m.shellAdapter.FormatAlias(bm.Alias, cmd)
+		aliasStr := m.shellAdapter.FormatAlias(bm.Alias, cmd, escapeMetadataField(bm.Description))
 		script.WriteString(aliasStr)
 	}
 
@@ -591,4 +601,31 @@ func splitMetadata(s string) []string {
 	}
 	parts = append(parts, current.String())
 	return parts
+}
+
+// trailingComment returns the text of a trailing "# comment" on a shell line,
+// ignoring any # that appears inside single or double quotes.
+func trailingComment(line string) (string, bool) {
+	var quote rune
+	runes := []rune(line)
+	for i := 0; i < len(runes); i++ {
+		r := runes[i]
+		switch {
+		case quote == '\'':
+			if r == '\'' {
+				quote = 0
+			}
+		case quote == '"':
+			if r == '\\' {
+				i++
+			} else if r == '"' {
+				quote = 0
+			}
+		case r == '\'' || r == '"':
+			quote = r
+		case r == '#' && i > 0 && (runes[i-1] == ' ' || runes[i-1] == '\t'):
+			return strings.TrimSpace(string(runes[i+1:])), true
+		}
+	}
+	return "", false
 }

@@ -18,32 +18,39 @@ func New(shellType string) *Adapter {
 }
 
 // FormatAlias formats a bookmark alias for the configured shell.
-func (a *Adapter) FormatAlias(alias, command string) string {
+// A non-empty description is written as a trailing comment on the alias line
+// (on the function line for fish). The description must already be escaped so
+// it fits on a single line.
+func (a *Adapter) FormatAlias(alias, command, description string) string {
+	comment := ""
+	if description != "" {
+		comment = " # " + description
+	}
 	switch a.shellType {
 	case "fish":
-		return a.formatFishFunction(alias, command)
+		return a.formatFishFunction(alias, command, comment)
 	case "nu", "nushell":
-		return a.formatNushellAlias(alias, command)
+		return a.formatNushellAlias(alias, command, comment)
 	default: // bash, zsh, sh
-		return a.formatPosixAlias(alias, command)
+		return a.formatPosixAlias(alias, command, comment)
 	}
 }
 
 // formatPosixAlias formats an alias for POSIX-compatible shells (bash, zsh, sh).
-func (a *Adapter) formatPosixAlias(alias, command string) string {
+func (a *Adapter) formatPosixAlias(alias, command, comment string) string {
 	escaped := strings.ReplaceAll(command, "'", "'\\''")
-	return fmt.Sprintf("alias %s='%s'\n\n", alias, escaped)
+	return fmt.Sprintf("alias %s='%s'%s\n\n", alias, escaped, comment)
 }
 
 // formatFishFunction formats a function for fish shell.
-func (a *Adapter) formatFishFunction(alias, command string) string {
-	return fmt.Sprintf("function %s\n\t%s\nend\n\n", alias, command)
+func (a *Adapter) formatFishFunction(alias, command, comment string) string {
+	return fmt.Sprintf("function %s%s\n\t%s\nend\n\n", alias, comment, command)
 }
 
 // formatNushellAlias formats an alias for nushell.
-func (a *Adapter) formatNushellAlias(alias, command string) string {
+func (a *Adapter) formatNushellAlias(alias, command, comment string) string {
 	// Nushell requires spaces around = in alias
-	return fmt.Sprintf("alias %s = %s\n\n", alias, command)
+	return fmt.Sprintf("alias %s = %s%s\n\n", alias, command, comment)
 }
 
 // GetFileExtension returns the appropriate file extension for the shell.

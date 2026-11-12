@@ -20,7 +20,7 @@ alias vb='cd "/home/devy/.bookmarks/" && tmux rename-window "vb" && nvim "/home/
 - [x] Fish and Nushell escaping unchanged
 - [x] Update tests (`manager_escaping_test.go`, `manager_spaces_test.go`, `cmd/bookmark/integration_test.go`) and add tests for `"`/`$`/`\` and the exact alias output
 
-## Feature 2: refactor bookmarks file
+## Feature 2: refactor bookmarks file [x]
 
 
 move alias description from BM comment.
@@ -29,3 +29,9 @@ description should be saved as a comment after alias value
 # BM: vb|/home/devy/.bookmarks/|vim bookmarks|2026-11-11T18:02:23-08:00|2026-11-11T18:03:26-08:00|vb|||/home/devy/.bookmarks/bookmarks.sh
 alias vb='cd '\''/home/devy/.bookmarks/'\'' && tmux rename-window '\''vb'\'' && nvim '\''/home/devy/.bookmarks/bookmarks.sh'\'''
 
+- [x] Remove the description field from the `# BM:` metadata line (now 8 fields: alias|path|created|updated|tmux|execute|postscript|file)
+- [x] Write the description as a trailing `# comment` after the alias value (after `function name` for fish, after the command for nushell); newlines/backslashes are escaped to keep it on one line
+- [x] `FormatAlias` in `internal/adapters/shell/shell.go` takes the description and appends the comment
+- [x] Parser reads the description from the trailing comment, ignoring `#` inside single/double quotes (`trailingComment`)
+- [x] Backward compatible: legacy 9-field `# BM:` lines still load, description included, and are rewritten in the new layout on next save
+- [x] Add tests for trailing-comment round trip and legacy loading; update the metadata field-count test
